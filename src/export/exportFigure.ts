@@ -1,5 +1,5 @@
 import type { AppConfig } from "../types";
-import { renderProjectedRaster } from "../render/raster";
+import { isRasterBackground, renderProjectedRaster } from "../render/raster";
 
 function downloadBlob(blob: Blob, filename: string): void {
   const url = URL.createObjectURL(blob);
@@ -54,7 +54,7 @@ function svgStringToImage(svgMarkup: string): Promise<HTMLImageElement> {
 }
 
 async function createRasterForExport(config: AppConfig): Promise<HTMLCanvasElement | null> {
-  if (!config.map.showRaster) return null;
+  if (!isRasterBackground(config.map.backgroundStyle)) return null;
   const rasterWidth = Math.min(2400, config.figure.width);
   return renderProjectedRaster({
     projection: config.projection,
@@ -62,6 +62,7 @@ async function createRasterForExport(config: AppConfig): Promise<HTMLCanvasEleme
     logicalHeight: config.figure.height,
     outputWidth: rasterWidth,
     outputHeight: Math.round(rasterWidth * (config.figure.height / config.figure.width)),
+    backgroundStyle: config.map.backgroundStyle,
     yieldDuringRender: true,
   });
 }

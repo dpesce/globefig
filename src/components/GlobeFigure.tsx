@@ -6,8 +6,16 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { geoGraticule10, geoPath } from "d3-geo";
-import { buildBaselinePairs } from "../geo/baselines";
+import {
+  geoGraticule10,
+  geoPath,
+  type GeoPermissibleObjects,
+} from "d3-geo";
+import worldCountries from "../data/world-countries-110m.json";
+import {
+  baselineStyleGroupId,
+  buildBaselinePairs,
+} from "../geo/baselines";
 import { placeLabels } from "../geo/labels";
 import {
   createProjection,
@@ -17,11 +25,11 @@ import {
 } from "../geo/projections";
 import { SITE_BY_ID, SITES } from "../data/sites";
 import { markerPath } from "../render/markers";
+import { isRasterBackground } from "../render/raster";
 import type {
   AppConfig,
   LabelPlacement,
   ProjectedSite,
-  StyleGroup,
   TelescopeSite,
 } from "../types";
 import { RasterLayer } from "./RasterLayer";
@@ -37,18 +45,27 @@ interface DragState {
   startY: number;
   initialDx: number;
   initialDy: number;
+  anchor: LabelPlacement["anchor"];
 }
 
-function baselineGroup(entries: ProjectedSite[]): StyleGroup {
-  const group3 = entries.find((entry) => entry.group.id === "other");
-  if (group3) {
-    return group3.group;
-  }
-  const group2 = entries.find((entry) => entry.group.id === "ngeht");
-  if (group2) {
-    return group2.group;
-  }
-  return entries[0].group;
+interface CountryFeature {
+  type: "Feature";
+  properties: {
+    ADMIN?: string;
+    CONTINENT?: string;
+  };
+  geometry: GeoPermissibleObjects;
+}
+
+const COUNTRY_FEATURES = (
+  worldCountries as unknown as { features: CountryFeature[] }
+).features;
+
+function isIceFeature(feature: CountryFeature): boolean {
+  return (
+    feature.properties.CONTINENT === "Antarctica" ||
+    feature.properties.ADMIN === "Greenland"
+  );
 }
 
 function toSvgPoint(svg: SVGSVGElement, clientX: number, clientY: number): [number, number] {
@@ -109,6 +126,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
       config.baselines.geometry,
       config.projection.name,
     );
+    const rasterBackground = isRasterBackground(config.map.backgroundStyle);
     const labelPlacements = useMemo(
       () => placeLabels(projectedSites, config),
       [config, projectedSites],
@@ -144,6 +162,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
         startY,
         initialDx: placement.x - entry.x,
         initialDy: placement.y - entry.y,
+        anchor: placement.anchor,
       };
     };
 
@@ -159,6 +178,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
           [drag.siteId]: {
             dx: drag.initialDx + x - drag.startX,
             dy: drag.initialDy + y - drag.startY,
+            anchor: drag.anchor,
           },
         },
       }));
@@ -208,9 +228,39 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
         >
           <path
             d={path(SPHERE) ?? undefined}
-            fill={config.map.showRaster ? "transparent" : "#0a1741"}
+            fill={
+              rasterBackground
+                ? "transparent"
+                : config.map.backgroundStyle === "three-color"
+                  ? "#4f9fca"
+                  : "#f7f7f4"
+            }
             className="sphere-fill"
           />
+          {!rasterBackground && (
+            <g className="vector-globe-background" pointerEvents="none">
+              {COUNTRY_FEATURES.map((feature, index) => (
+                <path
+                  key={`${feature.properties.ADMIN ?? "country"}-${index}`}
+                  d={path(feature as unknown as GeoPermissibleObjects) ?? undefined}
+                  fill={
+                    config.map.backgroundStyle === "three-color"
+                      ? isIceFeature(feature)
+                        ? "#ffffff"
+                        : "#6ca45f"
+                      : "#f7f7f4"
+                  }
+                  stroke={
+                    config.map.backgroundStyle === "borders" ? "#17191c" : "none"
+                  }
+                  strokeWidth={
+                    config.map.backgroundStyle === "borders" ? 0.75 : undefined
+                  }
+                  vectorEffect="non-scaling-stroke"
+                />
+              ))}
+            </g>
+          )}
           {config.map.showGraticule && (
             <path
               d={path(geoGraticule10()) ?? undefined}
@@ -228,26 +278,26 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
                 const second = projectedById.get(pair.second.id);
                 if (!first || !second) return null;
                 if (geometry === "straight" && (!first.visible || !second.visible)) return null;
-                const endpointEntries = [...pair.firstSiteIds, ...pair.secondSiteIds]
-                  .map((siteId) => projectedById.get(siteId))
-                  .filter((entry): entry is ProjectedSite => entry !== undefined);
                 const focused =
                   pair.firstSiteIds.includes(config.baselines.focusSiteId ?? "") ||
                   pair.secondSiteIds.includes(config.baselines.focusSiteId ?? "");
-                const group = baselineGroup(endpointEntries);
+                const groupId = baselineStyleGroupId(pair, config.selectedSites);
+                const group = groupId ? config.groups[groupId] : null;
                 const color = focused
                   ? config.baselines.focusColor
-                  : config.baselines.colorByGroup
+                  : config.baselines.colorByGroup && group
                     ? group.baselineColor
                     : config.baselines.color;
                 const opacity = focused
                   ? config.baselines.focusOpacity
-                  : config.baselines.colorByGroup
+                  : config.baselines.colorByGroup && group
                     ? group.baselineOpacity
                     : config.baselines.opacity;
                 const width = focused
                   ? config.baselines.focusWidth
-                  : config.baselines.width;
+                  : config.baselines.colorByGroup && group
+                    ? group.baselineWidth
+                    : config.baselines.width;
                 const key = `${pair.firstSiteIds.join("+")}-${pair.secondSiteIds.join("+")}`;
 
                 if (geometry === "straight") {

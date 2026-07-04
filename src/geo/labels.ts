@@ -76,7 +76,12 @@ export function placeLabels(
       const x = entry.x + manualOffset.dx;
       const y = entry.y + manualOffset.dy;
       const anchor =
-        Math.abs(manualOffset.dx) < 4 ? "middle" : manualOffset.dx < 0 ? "end" : "start";
+        manualOffset.anchor ??
+        (Math.abs(manualOffset.dx) < 4
+          ? "middle"
+          : manualOffset.dx < 0
+            ? "end"
+            : "start");
       const box = placementBox(x, y, textWidth, textHeight, anchor);
       placedBoxes.push(box);
       return {

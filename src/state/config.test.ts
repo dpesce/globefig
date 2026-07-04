@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { PRESETS } from "../data/presets";
-import { applyPreset, createDefaultConfig, normalizeConfig } from "./config";
+import type { AppConfig } from "../types";
+import {
+  applyBaselineStyle,
+  applyPreset,
+  createDefaultConfig,
+  normalizeConfig,
+} from "./config";
 
 describe("figure configuration", () => {
   it("starts with a blank Hammer globe and enabled automatic baselines", () => {
@@ -9,6 +15,7 @@ describe("figure configuration", () => {
     expect(config.selectedSites).toEqual({});
     expect(config.baselines.enabled).toBe(true);
     expect(config.baselines.geometry).toBe("auto");
+    expect(config.map.backgroundStyle).toBe("satellite");
     expect(config.labelOverrides).toEqual({});
     expect(Object.values(config.groups).map((group) => group.name)).toEqual([
       "Group 1",
@@ -177,5 +184,43 @@ describe("figure configuration", () => {
     const normalized = normalizeConfig(value);
     expect(normalized.figure.width).toBe(6000);
     expect(normalized.figure.height).toBe(300);
+  });
+
+  it("migrates projects saved before selectable globe backgrounds", () => {
+    const legacy = createDefaultConfig() as AppConfig & {
+      map: AppConfig["map"] & { showRaster?: boolean };
+    };
+    delete (legacy.map as Partial<AppConfig["map"]>).backgroundStyle;
+    legacy.map.showRaster = false;
+
+    expect(normalizeConfig(legacy).map.backgroundStyle).toBe("three-color");
+  });
+
+  it("edits All and group-specific baseline styles independently", () => {
+    const initial = createDefaultConfig();
+    const withAllStyle = applyBaselineStyle(initial, "all", {
+      color: "#123456",
+      width: 2,
+      opacity: 0.6,
+    });
+    const withGroupStyle = applyBaselineStyle(withAllStyle, "ngeht", {
+      color: "#abcdef",
+      width: 3,
+      opacity: 0.8,
+    });
+
+    expect(withGroupStyle.baselines).toMatchObject({
+      color: "#123456",
+      width: 2,
+      opacity: 0.6,
+    });
+    expect(withGroupStyle.groups.ngeht).toMatchObject({
+      baselineColor: "#abcdef",
+      baselineWidth: 3,
+      baselineOpacity: 0.8,
+    });
+    expect(withGroupStyle.groups.eht.baselineColor).toBe(
+      initial.groups.eht.baselineColor,
+    );
   });
 });

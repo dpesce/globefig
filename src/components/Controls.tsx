@@ -2,10 +2,11 @@ import { useState, type ReactNode } from "react";
 import { PRESETS } from "../data/presets";
 import { SITE_BY_ID, SITES } from "../data/sites";
 import { PROJECTION_OPTIONS, resolveBaselineGeometry } from "../geo/projections";
-import { applyPreset } from "../state/config";
+import { applyBaselineStyle, applyPreset } from "../state/config";
 import type {
   AppConfig,
   BaselineGeometry,
+  GlobeBackground,
   MarkerShape,
   ProjectionName,
   StyleGroup,
@@ -22,11 +23,45 @@ interface SectionProps {
   subtitle: string;
   children: ReactNode;
   open?: boolean;
+  testId?: string;
 }
 
-function Section({ title, subtitle, children, open = false }: SectionProps) {
+const BACKGROUND_OPTIONS: Array<{
+  value: GlobeBackground;
+  label: string;
+  note: string;
+}> = [
+  {
+    value: "satellite",
+    label: "Satellite imagery",
+    note: "NASA Blue Marble true-color mosaic",
+  },
+  {
+    value: "shaded-relief",
+    label: "Shaded relief",
+    note: "Natural Earth terrain and bathymetry",
+  },
+  {
+    value: "three-color",
+    label: "Three-color map",
+    note: "Green land, blue water, and white ice",
+  },
+  {
+    value: "borders",
+    label: "Black-and-white borders",
+    note: "Country and coastline outlines",
+  },
+];
+
+function Section({
+  title,
+  subtitle,
+  children,
+  open = false,
+  testId,
+}: SectionProps) {
   return (
-    <details className="control-section" open={open}>
+    <details className="control-section" data-testid={testId} open={open}>
       <summary>
         <span>
           <strong>{title}</strong>
@@ -45,10 +80,12 @@ function Switch({
   checked,
   label,
   onChange,
+  testId,
 }: {
   checked: boolean;
   label: string;
   onChange: (checked: boolean) => void;
+  testId?: string;
 }) {
   return (
     <label className="switch-row">
@@ -56,6 +93,7 @@ function Switch({
       <span className="switch">
         <input
           type="checkbox"
+          data-testid={testId}
           checked={checked}
           onChange={(event) => onChange(event.target.checked)}
         />
@@ -69,10 +107,12 @@ function ColorField({
   label,
   value,
   onChange,
+  testId,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  testId?: string;
 }) {
   return (
     <label className="color-field">
@@ -80,6 +120,7 @@ function ColorField({
       <span className="color-input-wrap">
         <input
           type="color"
+          data-testid={testId}
           value={value}
           onChange={(event) => onChange(event.target.value)}
         />
@@ -97,6 +138,7 @@ function RangeField({
   step,
   suffix = "",
   onChange,
+  testId,
 }: {
   label: string;
   value: number;
@@ -105,6 +147,7 @@ function RangeField({
   step: number;
   suffix?: string;
   onChange: (value: number) => void;
+  testId?: string;
 }) {
   return (
     <label className="range-field">
@@ -117,6 +160,7 @@ function RangeField({
       </span>
       <input
         type="range"
+        data-testid={testId}
         value={value}
         min={min}
         max={max}
@@ -146,8 +190,18 @@ function updateGroup(
 
 export function Controls({ config, setConfig }: ControlsProps) {
   const [editedGroupId, setEditedGroupId] = useState("eht");
+  const [editedBaselineGroupId, setEditedBaselineGroupId] = useState("all");
   const [editedLabelSiteId, setEditedLabelSiteId] = useState("");
   const editedGroup = config.groups[editedGroupId] ?? config.groups.eht;
+  const editedBaselineGroup =
+    editedBaselineGroupId === "all"
+      ? null
+      : config.groups[editedBaselineGroupId] ?? config.groups.eht;
+  const editedBaselineStyle = {
+    color: editedBaselineGroup?.baselineColor ?? config.baselines.color,
+    width: editedBaselineGroup?.baselineWidth ?? config.baselines.width,
+    opacity: editedBaselineGroup?.baselineOpacity ?? config.baselines.opacity,
+  };
   const selectedSiteIds = Object.keys(config.selectedSites);
   const editableLabelSiteId = selectedSiteIds.includes(editedLabelSiteId)
     ? editedLabelSiteId
@@ -170,6 +224,7 @@ export function Controls({ config, setConfig }: ControlsProps) {
         <label className="field">
           <span>Array preset</span>
           <select
+            data-testid="array-preset-select"
             value=""
             onChange={(event) => {
               const preset = PRESETS.find((candidate) => candidate.id === event.target.value);
@@ -257,6 +312,7 @@ export function Controls({ config, setConfig }: ControlsProps) {
       <Section
         title="Baselines"
         subtitle={config.baselines.enabled ? `${resolvedGeometry} connections` : "Hidden"}
+        testId="baseline-section"
       >
         <Switch
           label="Show baselines"
@@ -290,45 +346,9 @@ export function Controls({ config, setConfig }: ControlsProps) {
             Auto uses straight lines for orthographic and geodesics otherwise.
           </small>
         </label>
-        <ColorField
-          label="Line color"
-          value={config.baselines.color}
-          onChange={(color) =>
-            setConfig((current) => ({
-              ...current,
-              baselines: { ...current.baselines, color },
-            }))
-          }
-        />
-        <RangeField
-          label="Line width"
-          value={config.baselines.width}
-          min={0.25}
-          max={6}
-          step={0.25}
-          suffix=" px"
-          onChange={(width) =>
-            setConfig((current) => ({
-              ...current,
-              baselines: { ...current.baselines, width },
-            }))
-          }
-        />
-        <RangeField
-          label="Line opacity"
-          value={config.baselines.opacity}
-          min={0.02}
-          max={1}
-          step={0.02}
-          onChange={(opacity) =>
-            setConfig((current) => ({
-              ...current,
-              baselines: { ...current.baselines, opacity },
-            }))
-          }
-        />
         <Switch
-          label="Color by style group"
+          label="Style by telescope group"
+          testId="baseline-group-style-toggle"
           checked={config.baselines.colorByGroup}
           onChange={(colorByGroup) =>
             setConfig((current) => ({
@@ -337,6 +357,66 @@ export function Controls({ config, setConfig }: ControlsProps) {
             }))
           }
         />
+        <label className="field">
+          <span>Edit baselines</span>
+          <select
+            data-testid="baseline-style-target"
+            value={editedBaselineGroupId}
+            onChange={(event) => setEditedBaselineGroupId(event.target.value)}
+          >
+            <option value="all">All</option>
+            {Object.values(config.groups).map((group) => (
+              <option key={group.id} value={group.id}>
+                {group.name}
+              </option>
+            ))}
+          </select>
+          <small className="field-note">
+            Mixed-group baselines always inherit the All settings.
+          </small>
+        </label>
+        <ColorField
+          label="Line color"
+          testId="baseline-line-color"
+          value={editedBaselineStyle.color}
+          onChange={(color) =>
+            setConfig((current) =>
+              applyBaselineStyle(current, editedBaselineGroupId, { color }),
+            )
+          }
+        />
+        <RangeField
+          label="Line width"
+          testId="baseline-line-width"
+          value={editedBaselineStyle.width}
+          min={0.25}
+          max={6}
+          step={0.25}
+          suffix=" px"
+          onChange={(width) =>
+            setConfig((current) =>
+              applyBaselineStyle(current, editedBaselineGroupId, { width }),
+            )
+          }
+        />
+        <RangeField
+          label="Line opacity"
+          testId="baseline-line-opacity"
+          value={editedBaselineStyle.opacity}
+          min={0.02}
+          max={1}
+          step={0.02}
+          onChange={(opacity) =>
+            setConfig((current) =>
+              applyBaselineStyle(current, editedBaselineGroupId, { opacity }),
+            )
+          }
+        />
+        {editedBaselineGroupId !== "all" && !config.baselines.colorByGroup && (
+          <p className="field-note">
+            Turn on “Style by telescope group” to apply this group’s settings.
+          </p>
+        )}
         <label className="field">
           <span>Focus telescope</span>
           <select
@@ -455,13 +535,6 @@ export function Controls({ config, setConfig }: ControlsProps) {
           label="Group label color"
           value={editedGroup.labelColor}
           onChange={(labelColor) => updateGroup(setConfig, editedGroupId, { labelColor })}
-        />
-        <ColorField
-          label="Group baseline color"
-          value={editedGroup.baselineColor}
-          onChange={(baselineColor) =>
-            updateGroup(setConfig, editedGroupId, { baselineColor })
-          }
         />
       </Section>
 
@@ -673,19 +746,38 @@ export function Controls({ config, setConfig }: ControlsProps) {
       </Section>
 
       <Section title="Globe & canvas" subtitle={`${config.figure.width} × ${config.figure.height} px`}>
-        <Switch
-          label="Satellite imagery"
-          checked={config.map.showRaster}
-          onChange={(showRaster) =>
-            setConfig((current) => ({
-              ...current,
-              map: { ...current.map, showRaster },
-            }))
-          }
-        />
-        {config.map.showRaster && (
+        <label className="field">
+          <span>Globe background</span>
+          <select
+            data-testid="globe-background-select"
+            value={config.map.backgroundStyle}
+            onChange={(event) =>
+              setConfig((current) => ({
+                ...current,
+                map: {
+                  ...current.map,
+                  backgroundStyle: event.target.value as GlobeBackground,
+                },
+              }))
+            }
+          >
+            {BACKGROUND_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <small className="field-note">
+            {
+              BACKGROUND_OPTIONS.find(
+                (option) => option.value === config.map.backgroundStyle,
+              )?.note
+            }
+          </small>
+        </label>
+        {["satellite", "shaded-relief"].includes(config.map.backgroundStyle) && (
           <RangeField
-            label="Imagery opacity"
+            label="Background opacity"
             value={config.map.rasterOpacity}
             min={0}
             max={1}

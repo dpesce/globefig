@@ -6,6 +6,11 @@ export type ProjectionName =
 
 export type BaselineGeometry = "auto" | "geodesic" | "straight";
 export type MarkerShape = "circle" | "square" | "diamond" | "triangle" | "star";
+export type GlobeBackground =
+  | "satellite"
+  | "shaded-relief"
+  | "three-color"
+  | "borders";
 
 export interface TelescopeSite {
   id: string;
@@ -31,12 +36,14 @@ export interface StyleGroup {
   markerStrokeWidth: number;
   labelColor: string;
   baselineColor: string;
+  baselineWidth: number;
   baselineOpacity: number;
 }
 
 export interface LabelOffset {
   dx: number;
   dy: number;
+  anchor?: "start" | "middle" | "end";
 }
 
 export interface AppConfig {
@@ -53,7 +60,7 @@ export interface AppConfig {
     transparent: boolean;
   };
   map: {
-    showRaster: boolean;
+    backgroundStyle: GlobeBackground;
     rasterOpacity: number;
     showGraticule: boolean;
     graticuleColor: string;

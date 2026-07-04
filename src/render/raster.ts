@@ -1,8 +1,11 @@
 import { geoDistance, geoPath } from "d3-geo";
 import { createProjection, SPHERE } from "../geo/projections";
-import type { AppConfig } from "../types";
+import type { AppConfig, GlobeBackground } from "../types";
 
-const RASTER_URL = `${import.meta.env.BASE_URL}assets/earth-blue-marble.webp`;
+const RASTER_URLS: Partial<Record<GlobeBackground, string>> = {
+  satellite: `${import.meta.env.BASE_URL}assets/earth-blue-marble.webp`,
+  "shaded-relief": `${import.meta.env.BASE_URL}assets/earth-shaded-relief.webp`,
+};
 
 interface SourceRaster {
   width: number;
@@ -16,11 +19,12 @@ interface RasterRenderOptions {
   logicalHeight: number;
   outputWidth: number;
   outputHeight: number;
+  backgroundStyle: GlobeBackground;
   shouldCancel?: () => boolean;
   yieldDuringRender?: boolean;
 }
 
-let sourcePromise: Promise<SourceRaster> | undefined;
+const sourcePromises = new Map<GlobeBackground, Promise<SourceRaster>>();
 
 function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -32,23 +36,38 @@ function loadImage(url: string): Promise<HTMLImageElement> {
   });
 }
 
-export function loadSourceRaster(): Promise<SourceRaster> {
-  if (!sourcePromise) {
-    sourcePromise = loadImage(RASTER_URL).then((image) => {
-      const canvas = document.createElement("canvas");
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      if (!context) throw new Error("Canvas 2D is unavailable.");
-      context.drawImage(image, 0, 0);
-      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      return {
-        width: canvas.width,
-        height: canvas.height,
-        pixels: imageData.data,
-      };
-    });
+export function isRasterBackground(
+  backgroundStyle: GlobeBackground,
+): backgroundStyle is "satellite" | "shaded-relief" {
+  return backgroundStyle in RASTER_URLS;
+}
+
+export function loadSourceRaster(backgroundStyle: GlobeBackground): Promise<SourceRaster> {
+  const existing = sourcePromises.get(backgroundStyle);
+  if (existing) return existing;
+
+  const url = RASTER_URLS[backgroundStyle];
+  if (!url) {
+    return Promise.reject(
+      new Error(`Background style ${backgroundStyle} does not use a raster asset.`),
+    );
   }
+
+  const sourcePromise = loadImage(url).then((image) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) throw new Error("Canvas 2D is unavailable.");
+    context.drawImage(image, 0, 0);
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    return {
+      width: canvas.width,
+      height: canvas.height,
+      pixels: imageData.data,
+    };
+  });
+  sourcePromises.set(backgroundStyle, sourcePromise);
   return sourcePromise;
 }
 
@@ -77,10 +96,11 @@ export async function renderProjectedRaster({
   logicalHeight,
   outputWidth,
   outputHeight,
+  backgroundStyle,
   shouldCancel = () => false,
   yieldDuringRender = false,
 }: RasterRenderOptions): Promise<HTMLCanvasElement> {
-  const source = await loadSourceRaster();
+  const source = await loadSourceRaster(backgroundStyle);
   const output = document.createElement("canvas");
   output.width = Math.max(1, Math.round(outputWidth));
   output.height = Math.max(1, Math.round(outputHeight));

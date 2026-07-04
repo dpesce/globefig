@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { renderProjectedRaster } from "../render/raster";
+import { isRasterBackground, renderProjectedRaster } from "../render/raster";
 import type { AppConfig } from "../types";
 
 interface RasterLayerProps {
@@ -26,7 +26,7 @@ export function RasterLayer({ config, onRenderingChange }: RasterLayerProps) {
     const context = canvas.getContext("2d");
     context?.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (!config.map.showRaster) {
+    if (!isRasterBackground(config.map.backgroundStyle)) {
       onRenderingChange(false);
       return;
     }
@@ -39,6 +39,7 @@ export function RasterLayer({ config, onRenderingChange }: RasterLayerProps) {
         logicalHeight: config.figure.height,
         outputWidth: previewWidth,
         outputHeight: previewHeight,
+        backgroundStyle: config.map.backgroundStyle,
         shouldCancel: () => renderIdRef.current !== renderId,
         yieldDuringRender: true,
       })
@@ -60,7 +61,7 @@ export function RasterLayer({ config, onRenderingChange }: RasterLayerProps) {
   }, [
     config.figure.height,
     config.figure.width,
-    config.map.showRaster,
+    config.map.backgroundStyle,
     config.projection.centerLatitude,
     config.projection.centerLongitude,
     config.projection.name,

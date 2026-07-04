@@ -11,6 +11,18 @@ https://visibleearth.nasa.gov/collection/1484/blue-marble
 NASA image and media usage guidelines:
 https://www.nasa.gov/nasa-brand-center/images-and-media/
 
+Natural Earth I shaded relief with water, and Natural Earth 1:110m Admin 0
+country boundaries. Natural Earth map data is in the public domain.
+
+Natural Earth:
+https://www.naturalearthdata.com/
+
+Shaded relief:
+https://www.naturalearthdata.com/downloads/10m-natural-earth-1/natural-earth-1-with-shaded-relief/
+
+Country boundaries:
+https://github.com/nvkelso/natural-earth-vector
+
 Telescope catalog
 =================
 

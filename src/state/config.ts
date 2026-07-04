@@ -11,6 +11,7 @@ export const DEFAULT_GROUPS: Record<string, StyleGroup> = {
     markerStrokeWidth: 1.5,
     labelColor: "#f7d7a1",
     baselineColor: "#f6f8fc",
+    baselineWidth: 0.8,
     baselineOpacity: 0.28,
   },
   ngeht: {
@@ -23,6 +24,7 @@ export const DEFAULT_GROUPS: Record<string, StyleGroup> = {
     markerStrokeWidth: 1.5,
     labelColor: "#62c8ff",
     baselineColor: "#62c8ff",
+    baselineWidth: 0.8,
     baselineOpacity: 0.42,
   },
   other: {
@@ -35,6 +37,7 @@ export const DEFAULT_GROUPS: Record<string, StyleGroup> = {
     markerStrokeWidth: 1.5,
     labelColor: "#ffffff",
     baselineColor: "#ffffff",
+    baselineWidth: 0.8,
     baselineOpacity: 0.14,
   },
 };
@@ -54,7 +57,7 @@ export function createDefaultConfig(): AppConfig {
       transparent: false,
     },
     map: {
-      showRaster: true,
+      backgroundStyle: "satellite",
       rasterOpacity: 1,
       showGraticule: false,
       graticuleColor: "#dce8f7",
@@ -112,6 +115,10 @@ export function normalizeConfig(value: unknown): AppConfig {
   const defaults = createDefaultConfig();
   if (!isRecord(value) || value.schemaVersion !== 1) return defaults;
   const merged = mergeRecords(defaults as unknown as Record<string, unknown>, value) as unknown as AppConfig;
+  const incomingMap = isRecord(value.map) ? value.map : {};
+  if (!("backgroundStyle" in incomingMap) && incomingMap.showRaster === false) {
+    merged.map.backgroundStyle = "three-color";
+  }
   merged.figure.width = Math.min(6000, Math.max(600, Number(merged.figure.width) || 1500));
   merged.figure.height = Math.min(4000, Math.max(300, Number(merged.figure.height) || 786));
   merged.projection.centerLongitude = Math.min(
@@ -124,6 +131,13 @@ export function normalizeConfig(value: unknown): AppConfig {
   );
   if (!["hammer", "orthographic", "mollweide", "robinson"].includes(merged.projection.name)) {
     merged.projection.name = "hammer";
+  }
+  if (
+    !["satellite", "shaded-relief", "three-color", "borders"].includes(
+      merged.map.backgroundStyle,
+    )
+  ) {
+    merged.map.backgroundStyle = "satellite";
   }
   return merged;
 }
@@ -142,4 +156,36 @@ export function applyPreset(config: AppConfig, preset: FigurePreset): AppConfig 
       focusSiteId: null,
     },
   });
+}
+
+type BaselineStylePatch = Partial<
+  Pick<AppConfig["baselines"], "color" | "width" | "opacity">
+>;
+
+export function applyBaselineStyle(
+  config: AppConfig,
+  groupId: string,
+  patch: BaselineStylePatch,
+): AppConfig {
+  if (groupId === "all") {
+    return {
+      ...config,
+      baselines: { ...config.baselines, ...patch },
+    };
+  }
+
+  const group = config.groups[groupId];
+  if (!group) return config;
+  return {
+    ...config,
+    groups: {
+      ...config.groups,
+      [groupId]: {
+        ...group,
+        baselineColor: patch.color ?? group.baselineColor,
+        baselineWidth: patch.width ?? group.baselineWidth,
+        baselineOpacity: patch.opacity ?? group.baselineOpacity,
+      },
+    },
+  };
 }

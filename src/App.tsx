@@ -140,7 +140,7 @@ export default function App() {
           <div className="canvas-heading">
             <div>
               <span className="eyebrow">Live preview</span>
-              <h1>Telescope array globe</h1>
+              <h1>Globe figure</h1>
             </div>
             <div className="project-actions">
               <button type="button" className="text-button" onClick={() => exportConfig(config)}>

@@ -15,7 +15,8 @@ browser and can be hosted on GitHub Pages.
 - Hammer–Aitoff, orthographic, Mollweide, and Robinson projections
 - Searchable 115-site telescope catalog and observing-array presets
 - Great-circle and projected-straight baselines
-- Per-group marker, label, and baseline styles
+- Per-group marker, label, and complete baseline styles
+- Satellite, shaded-relief, three-color, and border-only globe backgrounds
 - Automatic label placement with direct drag and text editing
 - Physical-site baseline deduplication for ALMA/APEX and JCMT/SMA
 - Focus-site baseline highlighting
@@ -65,10 +66,11 @@ more frequently than site coordinates.
 ## Rendering architecture
 
 The preview combines a Canvas raster layer with an SVG interaction layer.
-Satellite imagery is inverse-projected into the selected map projection.
-Baselines, markers, graticules, and labels remain vectors. PNG export composites
-the layers at the requested dimensions; SVG export embeds the projected raster
-while preserving the overlays as editable vectors.
+Satellite and shaded-relief imagery are inverse-projected into the selected map
+projection. The three-color and border-only maps, baselines, markers,
+graticules, and labels remain vectors. PNG export composites the layers at the
+requested dimensions; SVG export embeds any projected raster while preserving
+the overlays as editable vectors.
 
 ## GitHub Pages
 
@@ -77,11 +79,12 @@ The Vite base path is configured for
 Enable **Settings → Pages → GitHub Actions** in the repository. Pushes to
 `main` then build, test, and deploy automatically.
 
-## Imagery
+## Map data and imagery
 
-The globe raster is an optimized derivative of the `world_true_color.tif`
-asset used by the supplied legacy scripts. It corresponds to NASA Visible
-Earth's Blue Marble family of true-color global mosaics. See
+The satellite globe is an optimized derivative of the `world_true_color.tif`
+asset used by the supplied legacy scripts and corresponds to NASA Visible
+Earth's Blue Marble family. The shaded-relief raster and 1:110m country
+boundaries come from Natural Earth. See
 [`public/ATTRIBUTION.txt`](public/ATTRIBUTION.txt).
 
 ## Contributing

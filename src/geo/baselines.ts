@@ -46,6 +46,18 @@ export function buildBaselinePairs(sites: TelescopeSite[]): BaselinePair[] {
   return pairs;
 }
 
+export function baselineStyleGroupId(
+  pair: BaselinePair,
+  siteGroups: Record<string, string>,
+): string | null {
+  const groupIds = new Set(
+    [...pair.firstSiteIds, ...pair.secondSiteIds]
+      .map((siteId) => siteGroups[siteId])
+      .filter((groupId): groupId is string => groupId !== undefined),
+  );
+  return groupIds.size === 1 ? [...groupIds][0] : null;
+}
+
 export function baselineCount(siteCount: number): number {
   return siteCount < 2 ? 0 : (siteCount * (siteCount - 1)) / 2;
 }

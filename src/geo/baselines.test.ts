@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { buildBaselinePairs, baselineCount } from "./baselines";
+import {
+  baselineCount,
+  baselineStyleGroupId,
+  buildBaselinePairs,
+} from "./baselines";
 import { SITES } from "../data/sites";
 
 describe("baseline generation", () => {
@@ -41,5 +45,36 @@ describe("baseline generation", () => {
     expect(baselineCount(8)).toBe(28);
     expect(baselineCount(20)).toBe(190);
     expect(baselineCount(115)).toBe(6555);
+  });
+
+  it("uses a group style only when every endpoint telescope is in that group", () => {
+    const sites = ["ALMA", "APEX", "GLT"].map(
+      (id) => SITES.find((site) => site.id === id)!,
+    );
+    const pair = buildBaselinePairs(sites).find((candidate) =>
+      candidate.firstSiteIds.includes("ALMA"),
+    )!;
+
+    expect(
+      baselineStyleGroupId(pair, {
+        ALMA: "eht",
+        APEX: "eht",
+        GLT: "eht",
+      }),
+    ).toBe("eht");
+    expect(
+      baselineStyleGroupId(pair, {
+        ALMA: "eht",
+        APEX: "ngeht",
+        GLT: "eht",
+      }),
+    ).toBeNull();
+    expect(
+      baselineStyleGroupId(pair, {
+        ALMA: "eht",
+        APEX: "eht",
+        GLT: "ngeht",
+      }),
+    ).toBeNull();
   });
 });
