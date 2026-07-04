@@ -1,0 +1,54 @@
+{
+  "_reviewNote": "This is the domain-reviewable layer. Canonical ids come from Telescope_Site_Matrix.csv; aliases, display labels, and default visual groups live here.",
+  "sites": {
+    "ALMA": { "defaultGroup": "eht" },
+    "APEX": { "defaultGroup": "eht" },
+    "GLT": { "defaultGroup": "eht" },
+    "IRAM": { "defaultGroup": "eht", "aliases": ["PV"] },
+    "JCMT": { "defaultGroup": "eht" },
+    "KP": { "defaultGroup": "eht" },
+    "LMT": { "defaultGroup": "eht" },
+    "NOEMA": { "defaultGroup": "eht" },
+    "SMA": { "defaultGroup": "eht" },
+    "SMT": { "defaultGroup": "eht" },
+    "SPT": { "defaultGroup": "eht" },
+    "KVNPC": {
+      "defaultGroup": "eht",
+      "displayLabel": "KVN-PC",
+      "aliases": ["KVN-PC"]
+    },
+    "KVNYS": {
+      "defaultGroup": "eht",
+      "displayLabel": "KVN-YS",
+      "aliases": ["KVN-YS"]
+    },
+    "BAJA": {
+      "defaultGroup": "ngeht",
+      "displayLabel": "SPM",
+      "aliases": ["SPM"]
+    },
+    "CNI": {
+      "defaultGroup": "ngeht",
+      "displayLabel": "TEA",
+      "aliases": ["TEA"]
+    },
+    "JELM": { "defaultGroup": "ngeht" },
+    "LAS": {
+      "defaultGroup": "ngeht",
+      "displayLabel": "LCO",
+      "aliases": ["LCO"]
+    },
+    "KILI": {
+      "defaultGroup": "ngeht",
+      "displayLabel": "KST",
+      "aliases": ["KST"]
+    },
+    "HESS": {
+      "defaultGroup": "other",
+      "displayLabel": "AMT",
+      "aliases": ["AMT"]
+    },
+    "HAY": { "defaultGroup": "other" },
+    "OVRO": { "defaultGroup": "ngeht" }
+  }
+}

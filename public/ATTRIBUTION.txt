@@ -1,0 +1,21 @@
+Globe imagery
+==============
+
+NASA Visible Earth / Earth Observatory, Blue Marble global true-color mosaic.
+The WebP asset in this application is an optimized 4096 × 2048 derivative of
+the world_true_color.tif image used by the legacy GlobeFig scripts.
+
+Blue Marble collection:
+https://visibleearth.nasa.gov/collection/1484/blue-marble
+
+NASA image and media usage guidelines:
+https://www.nasa.gov/nasa-brand-center/images-and-media/
+
+Telescope catalog
+=================
+
+Telescope_Site_Matrix.csv from Smithsonian/ngeht-sims, source commit:
+8b1c84735c91d1c629e759c93f1603528a1f32fe
+
+The source repository is licensed under the MIT License:
+https://github.com/Smithsonian/ngeht-sims

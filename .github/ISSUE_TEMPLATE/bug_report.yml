@@ -1,0 +1,51 @@
+name: Bug report
+description: Report incorrect rendering or application behavior.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve GlobeFig.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: projection
+    attributes:
+      label: Projection
+      options:
+        - Hammer–Aitoff
+        - Orthographic
+        - Mollweide
+        - Robinson
+        - Mercator
+        - Not projection-specific
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      placeholder: Safari 19, Firefox 142, Chrome 140, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include the array preset, selected sites, or a share URL when possible.
+      placeholder: |
+        1. Select…
+        2. Change…
+        3. Export…
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Add screenshots or other relevant context.
