@@ -496,7 +496,7 @@
     "id": "IRAM",
     "code": "PV",
     "name": "IRAM 30-meter telescope",
-    "displayLabel": "IRAM",
+    "displayLabel": "IRAM 30m",
     "country": "Spain",
     "latitude": 37.066145,
     "longitude": -3.392597,
@@ -617,6 +617,21 @@
     "defaultGroup": "other"
   },
   {
+    "id": "KILI",
+    "code": "KI",
+    "name": "the saddle region between Kibo and Mawenzi peaks of Mount Kilimanjaro",
+    "displayLabel": "KILI",
+    "country": "Tanzania",
+    "latitude": -3.088055,
+    "longitude": 37.405676,
+    "elevation": 4433,
+    "diameter": null,
+    "aliases": [
+      "KST"
+    ],
+    "defaultGroup": "ngeht"
+  },
+  {
     "id": "KNM",
     "code": "KM",
     "name": "Kunming dish of the EAVN",
@@ -658,21 +673,6 @@
     "diameter": 12,
     "aliases": [],
     "defaultGroup": "eht"
-  },
-  {
-    "id": "KILI",
-    "code": "KI",
-    "name": "the saddle region between Kibo and Mawenzi peaks of Mount Kilimanjaro",
-    "displayLabel": "KST",
-    "country": "Tanzania",
-    "latitude": -3.088055,
-    "longitude": 37.405676,
-    "elevation": 4433,
-    "diameter": null,
-    "aliases": [
-      "KST"
-    ],
-    "defaultGroup": "ngeht"
   },
   {
     "id": "KVNPC",

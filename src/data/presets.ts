@@ -4,12 +4,25 @@ function grouped(ids: string[], groupId: string): Record<string, string> {
   return Object.fromEntries(ids.map((id) => [id, groupId]));
 }
 
-const EHT_2017 = ["IRAM", "SMT", "SMA", "LMT", "ALMA", "SPT", "APEX", "JCMT"];
-const EHT_REFERENCE = [
+const EHT_2017 = ["ALMA", "APEX", "IRAM", "JCMT", "LMT", "SMA", "SMT", "SPT"];
+const EHT_2018 = [...EHT_2017, "GLT"];
+const EHT_2021 = [
   "ALMA",
   "APEX",
   "GLT",
   "IRAM",
+  "JCMT",
+  "KP",
+  "NOEMA",
+  "SMA",
+  "SMT",
+  "SPT",
+];
+const EHT_2022 = [...EHT_2021, "LMT"];
+const EHT_2023 = [
+  "ALMA",
+  "APEX",
+  "GLT",
   "JCMT",
   "KP",
   "LMT",
@@ -17,12 +30,52 @@ const EHT_REFERENCE = [
   "SMA",
   "SMT",
   "SPT",
-  "KVNYS",
-  "KVNPC",
 ];
-const NGEHT_PHASE_1 = ["BAJA", "CNI", "HAY", "LAS", "OVRO", "JELM"];
-const VARIANT_08_NGEHT = ["BAJA", "CNI", "JELM", "LAS", "KILI"];
-const VARIANT_08_OTHER = ["HESS", "HAY"];
+const EHT_2024 = [
+  "ALMA",
+  "APEX",
+  "GLT",
+  "IRAM",
+  "JCMT",
+  "KP",
+  "KVNYS",
+  "LMT",
+  "NOEMA",
+  "SMA",
+  "SMT",
+  "SPT",
+];
+
+const NGEHT_PHASE_1_GROUP_1 = [
+  "ALMA",
+  "APEX",
+  "GLT",
+  "IRAM",
+  "JCMT",
+  "KP",
+  "KVNPC",
+  "KVNYS",
+  "LMT",
+  "NOEMA",
+  "SMA",
+  "SMT",
+  "SPT",
+];
+const NGEHT_PHASE_1_GROUP_2 = ["HAY", "JELM", "LAS", "OVRO", "BAJA", "CNI"];
+const NGEHT_PHASE_2_GROUP_3 = ["HESS", "BOL", "KILI", "SGO", "SPX"];
+
+const VLBA = [
+  "VLBBR",
+  "VLBFD",
+  "VLBHN",
+  "VLBKP",
+  "VLBLA",
+  "VLBMK",
+  "VLBNL",
+  "VLBOV",
+  "VLBPT",
+  "VLBSC",
+];
 
 export const PRESETS: FigurePreset[] = [
   {
@@ -33,64 +86,63 @@ export const PRESETS: FigurePreset[] = [
   },
   {
     id: "eht-2017",
-    name: "EHT 2017 (legacy)",
-    description: "Eight-station configuration from the legacy source files.",
+    name: "EHT (2017)",
+    description: "Event Horizon Telescope 2017 observing array.",
     siteGroups: grouped(EHT_2017, "eht"),
   },
   {
-    id: "eht-reference",
-    name: "EHT reference array",
-    description: "Reference EHT set used in the legacy Variant 08 figure.",
-    siteGroups: grouped(EHT_REFERENCE, "eht"),
+    id: "eht-2018",
+    name: "EHT (2018)",
+    description: "Event Horizon Telescope 2018 observing array.",
+    siteGroups: grouped(EHT_2018, "eht"),
+  },
+  {
+    id: "eht-2021",
+    name: "EHT (2021)",
+    description: "Event Horizon Telescope 2021 observing array.",
+    siteGroups: grouped(EHT_2021, "eht"),
+  },
+  {
+    id: "eht-2022",
+    name: "EHT (2022)",
+    description: "Event Horizon Telescope 2022 observing array.",
+    siteGroups: grouped(EHT_2022, "eht"),
+  },
+  {
+    id: "eht-2023",
+    name: "EHT (2023)",
+    description: "Event Horizon Telescope 2023 observing array.",
+    siteGroups: grouped(EHT_2023, "eht"),
+  },
+  {
+    id: "eht-2024",
+    name: "EHT (2024)",
+    description: "Event Horizon Telescope 2024 observing array.",
+    siteGroups: grouped(EHT_2024, "eht"),
   },
   {
     id: "ngeht-phase-1",
-    name: "EHT + ngEHT Phase 1 (legacy)",
-    description: "Reference EHT set plus the legacy Phase 1 candidate set.",
+    name: "ngEHT (Phase 1)",
+    description: "Phase 1 reference array, grouped by existing and new sites.",
     siteGroups: {
-      ...grouped(EHT_REFERENCE, "eht"),
-      ...grouped(NGEHT_PHASE_1, "ngeht"),
+      ...grouped(NGEHT_PHASE_1_GROUP_1, "eht"),
+      ...grouped(NGEHT_PHASE_1_GROUP_2, "ngeht"),
     },
   },
   {
-    id: "variant-08",
-    name: "Variant 08",
-    description: "Reproduces the site membership and visual hierarchy of the supplied reference.",
+    id: "ngeht-phase-2",
+    name: "ngEHT (Phase 2)",
+    description: "Phase 2 reference array, grouped by deployment phase.",
     siteGroups: {
-      ...grouped(EHT_REFERENCE, "eht"),
-      ...grouped(VARIANT_08_NGEHT, "ngeht"),
-      ...grouped(VARIANT_08_OTHER, "other"),
+      ...grouped(NGEHT_PHASE_1_GROUP_1, "eht"),
+      ...grouped(NGEHT_PHASE_1_GROUP_2, "ngeht"),
+      ...grouped(NGEHT_PHASE_2_GROUP_3, "other"),
     },
-    patch: {
-      projection: {
-        name: "hammer",
-        centerLongitude: -75,
-        centerLatitude: 12,
-      },
-      baselines: {
-        enabled: true,
-        geometry: "auto",
-        color: "#d9efff",
-        width: 0.8,
-        opacity: 0.28,
-        colorByGroup: true,
-        focusSiteId: null,
-        focusColor: "#ff335f",
-        focusWidth: 3,
-        focusOpacity: 0.92,
-      },
-      labels: {
-        enabled: true,
-        fontFamily: "Arial, Helvetica, sans-serif",
-        fontSize: 21,
-        fontWeight: "700",
-        color: "#ffffff",
-        useGroupColors: true,
-        haloEnabled: true,
-        haloColor: "#050a12",
-        haloWidth: 4,
-        showLeaderLines: false,
-      },
-    },
+  },
+  {
+    id: "vlba",
+    name: "VLBA",
+    description: "The ten Very Long Baseline Array stations.",
+    siteGroups: grouped(VLBA, "eht"),
   },
 ];

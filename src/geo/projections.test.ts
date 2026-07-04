@@ -3,7 +3,6 @@ import { SITE_BY_ID } from "../data/sites";
 import { createDefaultConfig } from "../state/config";
 import {
   createProjection,
-  isSiteVisible,
   resolveBaselineGeometry,
 } from "./projections";
 import type { ProjectionName } from "../types";
@@ -11,8 +10,14 @@ import type { ProjectionName } from "../types";
 describe("map projections", () => {
   const width = 1500;
   const height = 786;
+  const projectionNames: ProjectionName[] = [
+    "hammer",
+    "orthographic",
+    "mollweide",
+    "robinson",
+  ];
 
-  it.each<ProjectionName>(["hammer", "orthographic", "mollweide", "robinson", "mercator"])(
+  it.each(projectionNames)(
     "projects ALMA with the %s projection",
     (name) => {
       const config = createDefaultConfig().projection;
@@ -25,11 +30,14 @@ describe("map projections", () => {
     },
   );
 
-  it("does not claim the South Pole is representable in Mercator", () => {
+  it("applies center latitude to whole-globe projections", () => {
     const config = createDefaultConfig().projection;
-    config.name = "mercator";
-    const projection = createProjection(config, width, height);
-    expect(isSiteVisible(SITE_BY_ID.get("SPT")!, config, projection)).toBe(false);
+    config.name = "hammer";
+    config.centerLatitude = 0;
+    const northUp = createProjection(config, width, height)([0, 0]);
+    config.centerLatitude = 35;
+    const rotated = createProjection(config, width, height)([0, 0]);
+    expect(northUp).not.toEqual(rotated);
   });
 
   it("uses the requested automatic connection rules", () => {

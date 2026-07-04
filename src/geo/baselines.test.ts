@@ -4,11 +4,35 @@ import { SITES } from "../data/sites";
 
 describe("baseline generation", () => {
   it("uses each unordered pair exactly once", () => {
-    const sites = SITES.slice(0, 20);
+    const sites = ["GLT", "IRAM", "LMT", "SPT"].map(
+      (id) => SITES.find((site) => site.id === id)!,
+    );
     const pairs = buildBaselinePairs(sites);
-    expect(pairs).toHaveLength(190);
-    expect(new Set(pairs.map((pair) => `${pair.first.id}:${pair.second.id}`)).size).toBe(190);
+    expect(pairs).toHaveLength(6);
+    expect(new Set(pairs.map((pair) => `${pair.first.id}:${pair.second.id}`)).size).toBe(6);
     expect(pairs.every((pair) => pair.first.id !== pair.second.id)).toBe(true);
+  });
+
+  it("treats ALMA/APEX and JCMT/SMA as single physical sites", () => {
+    const sites = ["ALMA", "APEX", "JCMT", "SMA", "GLT"].map(
+      (id) => SITES.find((site) => site.id === id)!,
+    );
+    const pairs = buildBaselinePairs(sites);
+    expect(pairs).toHaveLength(3);
+    expect(
+      pairs.some(
+        (pair) =>
+          pair.firstSiteIds.includes("ALMA") &&
+          pair.firstSiteIds.includes("APEX"),
+      ),
+    ).toBe(true);
+    expect(
+      pairs.some(
+        (pair) =>
+          pair.firstSiteIds.includes("JCMT") &&
+          pair.firstSiteIds.includes("SMA"),
+      ),
+    ).toBe(true);
   });
 
   it("calculates complete-array baseline counts", () => {

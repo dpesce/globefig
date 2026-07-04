@@ -18,7 +18,8 @@ describe("normalized telescope catalog", () => {
     expect(SITE_BY_ID.get("CNI")?.displayLabel).toBe("TEA");
     expect(SITE_BY_ID.get("LAS")?.displayLabel).toBe("LCO");
     expect(SITE_BY_ID.get("HESS")?.displayLabel).toBe("AMT");
-    expect(SITE_BY_ID.get("KILI")?.displayLabel).toBe("KST");
+    expect(SITE_BY_ID.get("IRAM")?.displayLabel).toBe("IRAM 30m");
+    expect(SITE_BY_ID.get("KILI")?.displayLabel).toBe("KILI");
     expect(SITE_BY_ID.get("KVNYS")?.displayLabel).toBe("KVN-YS");
   });
 });

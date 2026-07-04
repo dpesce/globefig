@@ -22,7 +22,6 @@ body:
         - Orthographic
         - Mollweide
         - Robinson
-        - Mercator
         - Not projection-specific
     validations:
       required: true

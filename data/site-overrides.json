@@ -4,7 +4,11 @@
     "ALMA": { "defaultGroup": "eht" },
     "APEX": { "defaultGroup": "eht" },
     "GLT": { "defaultGroup": "eht" },
-    "IRAM": { "defaultGroup": "eht", "aliases": ["PV"] },
+    "IRAM": {
+      "defaultGroup": "eht",
+      "displayLabel": "IRAM 30m",
+      "aliases": ["PV"]
+    },
     "JCMT": { "defaultGroup": "eht" },
     "KP": { "defaultGroup": "eht" },
     "LMT": { "defaultGroup": "eht" },
@@ -40,7 +44,6 @@
     },
     "KILI": {
       "defaultGroup": "ngeht",
-      "displayLabel": "KST",
       "aliases": ["KST"]
     },
     "HESS": {

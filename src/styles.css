@@ -599,7 +599,8 @@ kbd {
 
 select,
 input[type="search"],
-input[type="number"] {
+input[type="number"],
+input[type="text"] {
   width: 100%;
   min-height: 38px;
   border: 1px solid var(--line-strong);
@@ -617,19 +618,22 @@ select {
 }
 
 input[type="search"],
-input[type="number"] {
+input[type="number"],
+input[type="text"] {
   padding: 0 11px;
 }
 
 select:hover,
 input[type="search"]:hover,
-input[type="number"]:hover {
+input[type="number"]:hover,
+input[type="text"]:hover {
   border-color: rgba(128, 191, 225, 0.42);
 }
 
 select:focus,
 input[type="search"]:focus,
-input[type="number"]:focus {
+input[type="number"]:focus,
+input[type="text"]:focus {
   border-color: var(--accent);
   outline: 0;
   box-shadow: 0 0 0 3px rgba(84, 201, 255, 0.08);

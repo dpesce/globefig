@@ -68,7 +68,6 @@ function isInProjection(
       Math.PI / 2 + 1e-6
     );
   }
-  if (projection.name === "mercator") return Math.abs(latitude) <= 85.0512;
   return longitude >= -180.0001 && longitude <= 180.0001;
 }
 

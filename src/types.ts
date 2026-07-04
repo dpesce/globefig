@@ -2,8 +2,7 @@ export type ProjectionName =
   | "hammer"
   | "orthographic"
   | "mollweide"
-  | "robinson"
-  | "mercator";
+  | "robinson";
 
 export type BaselineGeometry = "auto" | "geodesic" | "straight";
 export type MarkerShape = "circle" | "square" | "diamond" | "triangle" | "star";
@@ -89,6 +88,7 @@ export interface AppConfig {
   selectedSites: Record<string, string>;
   groups: Record<string, StyleGroup>;
   labelOffsets: Record<string, LabelOffset>;
+  labelOverrides: Record<string, string>;
 }
 
 export interface FigurePreset {
@@ -101,6 +101,7 @@ export interface FigurePreset {
 
 export interface ProjectedSite {
   site: TelescopeSite;
+  label: string;
   x: number;
   y: number;
   visible: boolean;

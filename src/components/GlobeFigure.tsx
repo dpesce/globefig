@@ -7,7 +7,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { geoGraticule10, geoPath } from "d3-geo";
-import { buildBaselinePairs, baselineCount } from "../geo/baselines";
+import { buildBaselinePairs } from "../geo/baselines";
 import { placeLabels } from "../geo/labels";
 import {
   createProjection,
@@ -39,17 +39,16 @@ interface DragState {
   initialDy: number;
 }
 
-function baselineGroup(
-  first: ProjectedSite,
-  second: ProjectedSite,
-): StyleGroup {
-  if (first.group.id === "other" || second.group.id === "other") {
-    return first.group.id === "other" ? first.group : second.group;
+function baselineGroup(entries: ProjectedSite[]): StyleGroup {
+  const group3 = entries.find((entry) => entry.group.id === "other");
+  if (group3) {
+    return group3.group;
   }
-  if (first.group.id === "ngeht" || second.group.id === "ngeht") {
-    return first.group.id === "ngeht" ? first.group : second.group;
+  const group2 = entries.find((entry) => entry.group.id === "ngeht");
+  if (group2) {
+    return group2.group;
   }
-  return first.group;
+  return entries[0].group;
 }
 
 function toSvgPoint(svg: SVGSVGElement, clientX: number, clientY: number): [number, number] {
@@ -84,13 +83,22 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
           const groupId = config.selectedSites[site.id];
           return {
             site,
+            label:
+              config.labelOverrides[site.id]?.trim() || site.displayLabel,
             x: point?.[0] ?? 0,
             y: point?.[1] ?? 0,
             visible: point !== null && isSiteVisible(site, config.projection, projection),
             group: config.groups[groupId] ?? config.groups.other,
           };
         }),
-      [config.groups, config.projection, config.selectedSites, projection, selectedSites],
+      [
+        config.groups,
+        config.labelOverrides,
+        config.projection,
+        config.selectedSites,
+        projection,
+        selectedSites,
+      ],
     );
     const projectedById = useMemo(
       () => new Map(projectedSites.map((entry) => [entry.site.id, entry])),
@@ -185,9 +193,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
           className="figure-overlay"
           viewBox={`0 0 ${config.figure.width} ${config.figure.height}`}
           role="img"
-          aria-label={`Map with ${selectedSites.length} selected telescopes and ${baselineCount(
-            selectedSites.length,
-          )} baselines`}
+          aria-label={`Map with ${selectedSites.length} selected telescopes and ${pairs.length} baselines`}
           onPointerMove={moveLabel}
           onPointerUp={endLabelDrag}
           onPointerCancel={endLabelDrag}
@@ -222,10 +228,13 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
                 const second = projectedById.get(pair.second.id);
                 if (!first || !second) return null;
                 if (geometry === "straight" && (!first.visible || !second.visible)) return null;
+                const endpointEntries = [...pair.firstSiteIds, ...pair.secondSiteIds]
+                  .map((siteId) => projectedById.get(siteId))
+                  .filter((entry): entry is ProjectedSite => entry !== undefined);
                 const focused =
-                  config.baselines.focusSiteId === pair.first.id ||
-                  config.baselines.focusSiteId === pair.second.id;
-                const group = baselineGroup(first, second);
+                  pair.firstSiteIds.includes(config.baselines.focusSiteId ?? "") ||
+                  pair.secondSiteIds.includes(config.baselines.focusSiteId ?? "");
+                const group = baselineGroup(endpointEntries);
                 const color = focused
                   ? config.baselines.focusColor
                   : config.baselines.colorByGroup
@@ -239,7 +248,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
                 const width = focused
                   ? config.baselines.focusWidth
                   : config.baselines.width;
-                const key = `${pair.first.id}-${pair.second.id}`;
+                const key = `${pair.firstSiteIds.join("+")}-${pair.secondSiteIds.join("+")}`;
 
                 if (geometry === "straight") {
                   return (
@@ -318,14 +327,14 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
                     setFocusSite(entry.site);
                   }}
                   role="button"
-                  aria-label={`Focus ${entry.site.displayLabel}`}
+                  aria-label={`Focus ${entry.label}`}
                   tabIndex={0}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") setFocusSite(entry.site);
                   }}
                 >
                   <title>
-                    {entry.site.displayLabel} · {entry.site.name} · {entry.site.country}
+                    {entry.label} · {entry.site.name} · {entry.site.country}
                   </title>
                 </path>
               );
@@ -356,7 +365,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
                     className="site-label"
                     onPointerDown={(event) => beginLabelDrag(event, entry, placement)}
                   >
-                    {entry.site.displayLabel}
+                    {entry.label}
                   </text>
                 );
               })}
@@ -384,7 +393,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
         )}
         <div className="figure-meta" aria-hidden="true">
           <span>{selectedSites.length} sites</span>
-          <span>{baselineCount(selectedSites.length)} baselines</span>
+          <span>{pairs.length} baselines</span>
           <span>
             {geometry === "geodesic" ? "geodesic" : "straight"} connections
           </span>

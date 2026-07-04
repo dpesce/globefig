@@ -1,6 +1,5 @@
 import {
   geoDistance,
-  geoMercator,
   geoOrthographic,
   type GeoPermissibleObjects,
   type GeoProjection,
@@ -35,11 +34,6 @@ export const PROJECTION_OPTIONS: Array<{
     label: "Robinson",
     note: "Balanced compromise view",
   },
-  {
-    value: "mercator",
-    label: "Mercator",
-    note: "Clips the poles, including SPT",
-  },
 ];
 
 export function createProjection(
@@ -59,18 +53,14 @@ export function createProjection(
     case "robinson":
       projection = geoRobinson();
       break;
-    case "mercator":
-      projection = geoMercator();
-      break;
     case "hammer":
     default:
       projection = geoHammer();
       break;
   }
 
-  const latitude = config.name === "orthographic" ? config.centerLatitude : 0;
   projection
-    .rotate([-config.centerLongitude, -latitude, 0])
+    .rotate([-config.centerLongitude, -config.centerLatitude, 0])
     .precision(0.35)
     .fitExtent(
       [
@@ -98,7 +88,6 @@ export function isSiteVisible(
     );
   }
 
-  if (config.name === "mercator" && Math.abs(site.latitude) >= 85) return false;
   const point = projection([site.longitude, site.latitude]);
   return point !== null && point.every(Number.isFinite);
 }

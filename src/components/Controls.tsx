@@ -146,8 +146,13 @@ function updateGroup(
 
 export function Controls({ config, setConfig }: ControlsProps) {
   const [editedGroupId, setEditedGroupId] = useState("eht");
+  const [editedLabelSiteId, setEditedLabelSiteId] = useState("");
   const editedGroup = config.groups[editedGroupId] ?? config.groups.eht;
   const selectedSiteIds = Object.keys(config.selectedSites);
+  const editableLabelSiteId = selectedSiteIds.includes(editedLabelSiteId)
+    ? editedLabelSiteId
+    : selectedSiteIds[0] ?? "";
+  const editableLabelSite = SITE_BY_ID.get(editableLabelSiteId);
   const resolvedGeometry = resolveBaselineGeometry(
     config.baselines.geometry,
     config.projection.name,
@@ -227,25 +232,24 @@ export function Controls({ config, setConfig }: ControlsProps) {
             }))
           }
         />
-        {config.projection.name === "orthographic" && (
-          <RangeField
-            label="Center latitude"
-            value={config.projection.centerLatitude}
-            min={-90}
-            max={90}
-            step={1}
-            suffix="°"
-            onChange={(value) =>
-              setConfig((current) => ({
-                ...current,
-                projection: { ...current.projection, centerLatitude: value },
-              }))
-            }
-          />
-        )}
-        {config.projection.name === "mercator" && (
-          <p className="warning-note">
-            Mercator clips both poles. SPT will not appear in this projection.
+        <RangeField
+          label="Center latitude"
+          value={config.projection.centerLatitude}
+          min={-90}
+          max={90}
+          step={1}
+          suffix="°"
+          onChange={(value) =>
+            setConfig((current) => ({
+              ...current,
+              projection: { ...current.projection, centerLatitude: value },
+            }))
+          }
+        />
+        {config.projection.name !== "orthographic" && config.projection.centerLatitude !== 0 && (
+          <p className="field-note">
+            A nonzero latitude rotates this global projection away from its conventional
+            north-up aspect.
           </p>
         )}
       </Section>
@@ -475,6 +479,69 @@ export function Controls({ config, setConfig }: ControlsProps) {
             }))
           }
         />
+        {selectedSiteIds.length > 0 && (
+          <>
+            <label className="field">
+              <span>Edit station label</span>
+              <select
+                value={editableLabelSiteId}
+                onChange={(event) => setEditedLabelSiteId(event.target.value)}
+              >
+                {selectedSiteIds
+                  .map((id) => SITE_BY_ID.get(id))
+                  .filter((site): site is NonNullable<typeof site> => site !== undefined)
+                  .sort((first, second) =>
+                    first.displayLabel.localeCompare(second.displayLabel),
+                  )
+                  .map((site) => (
+                    <option key={site.id} value={site.id}>
+                      {config.labelOverrides[site.id]?.trim() || site.displayLabel}
+                    </option>
+                  ))}
+              </select>
+            </label>
+            <label className="field">
+              <span>Label text</span>
+              <input
+                type="text"
+                value={
+                  editableLabelSite
+                    ? config.labelOverrides[editableLabelSite.id] ??
+                      editableLabelSite.displayLabel
+                    : ""
+                }
+                onChange={(event) => {
+                  if (!editableLabelSite) return;
+                  setConfig((current) => ({
+                    ...current,
+                    labelOverrides: {
+                      ...current.labelOverrides,
+                      [editableLabelSite.id]: event.target.value,
+                    },
+                  }));
+                }}
+              />
+            </label>
+            <button
+              type="button"
+              className="secondary-button full-width"
+              disabled={
+                !editableLabelSite ||
+                config.labelOverrides[editableLabelSite.id] === undefined
+              }
+              onClick={() => {
+                if (!editableLabelSite) return;
+                setConfig((current) => {
+                  const labelOverrides = { ...current.labelOverrides };
+                  delete labelOverrides[editableLabelSite.id];
+                  return { ...current, labelOverrides };
+                });
+              }}
+            >
+              Restore catalog label
+            </button>
+          </>
+        )}
         <label className="field">
           <span>Typeface</span>
           <select

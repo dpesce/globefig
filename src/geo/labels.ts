@@ -67,7 +67,7 @@ export function placeLabels(
   return visibleSites.map((entry) => {
     const textWidth = Math.max(
       config.labels.fontSize * 1.8,
-      entry.site.displayLabel.length * config.labels.fontSize * 0.62,
+      entry.label.length * config.labels.fontSize * 0.62,
     );
     const textHeight = config.labels.fontSize * 1.18;
     const manualOffset = config.labelOffsets[entry.site.id];

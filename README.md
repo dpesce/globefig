@@ -12,17 +12,16 @@ browser and can be hosted on GitHub Pages.
 
 ## Features
 
-- Hammer–Aitoff, orthographic, Mollweide, Robinson, and Mercator projections
-- Searchable 115-site telescope catalog and legacy array presets
+- Hammer–Aitoff, orthographic, Mollweide, and Robinson projections
+- Searchable 115-site telescope catalog and observing-array presets
 - Great-circle and projected-straight baselines
 - Per-group marker, label, and baseline styles
-- Automatic label placement with direct drag editing
+- Automatic label placement with direct drag and text editing
+- Physical-site baseline deduplication for ALMA/APEX and JCMT/SMA
 - Focus-site baseline highlighting
 - PNG, editable SVG, and versioned project-JSON exports
 - Complete figure configurations encoded in shareable URLs
 - Responsive interface with no server or Python runtime
-
-Mercator is included for completeness but clips the poles, including SPT.
 
 ## Development
 

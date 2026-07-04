@@ -3,7 +3,7 @@ import type { AppConfig, FigurePreset, StyleGroup } from "../types";
 export const DEFAULT_GROUPS: Record<string, StyleGroup> = {
   eht: {
     id: "eht",
-    name: "EHT",
+    name: "Group 1",
     markerShape: "circle",
     markerSize: 7,
     markerFill: "#f7d7a1",
@@ -15,7 +15,7 @@ export const DEFAULT_GROUPS: Record<string, StyleGroup> = {
   },
   ngeht: {
     id: "ngeht",
-    name: "ngEHT",
+    name: "Group 2",
     markerShape: "circle",
     markerSize: 7,
     markerFill: "#62c8ff",
@@ -27,7 +27,7 @@ export const DEFAULT_GROUPS: Record<string, StyleGroup> = {
   },
   other: {
     id: "other",
-    name: "Additional",
+    name: "Group 3",
     markerShape: "circle",
     markerSize: 7,
     markerFill: "#ffffff",
@@ -45,7 +45,7 @@ export function createDefaultConfig(): AppConfig {
     projection: {
       name: "hammer",
       centerLongitude: -75,
-      centerLatitude: 12,
+      centerLatitude: 0,
     },
     figure: {
       width: 1500,
@@ -89,6 +89,7 @@ export function createDefaultConfig(): AppConfig {
     selectedSites: {},
     groups: structuredClone(DEFAULT_GROUPS),
     labelOffsets: {},
+    labelOverrides: {},
   };
 }
 
@@ -121,6 +122,9 @@ export function normalizeConfig(value: unknown): AppConfig {
     90,
     Math.max(-90, Number(merged.projection.centerLatitude) || 0),
   );
+  if (!["hammer", "orthographic", "mollweide", "robinson"].includes(merged.projection.name)) {
+    merged.projection.name = "hammer";
+  }
   return merged;
 }
 
