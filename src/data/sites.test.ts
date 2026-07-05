@@ -21,5 +21,7 @@ describe("normalized telescope catalog", () => {
     expect(SITE_BY_ID.get("IRAM")?.displayLabel).toBe("IRAM 30m");
     expect(SITE_BY_ID.get("KILI")?.displayLabel).toBe("KILI");
     expect(SITE_BY_ID.get("KVNYS")?.displayLabel).toBe("KVN-YS");
+    expect(SITE_BY_ID.get("KVNTN")?.displayLabel).toBe("KVN-TN");
+    expect(SITE_BY_ID.get("KVNUS")?.displayLabel).toBe("KVN-US");
   });
 });

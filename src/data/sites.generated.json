@@ -690,6 +690,36 @@
     "defaultGroup": "eht"
   },
   {
+    "id": "KVNTN",
+    "code": "KT",
+    "name": "Korean VLBI Network Tamna",
+    "displayLabel": "KVN-TN",
+    "country": "Korea",
+    "latitude": 33.289021,
+    "longitude": 126.459573,
+    "elevation": 411,
+    "diameter": 21,
+    "aliases": [
+      "KVN-TN"
+    ],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "KVNUS",
+    "code": "KU",
+    "name": "Korean VLBI Network Ulsan",
+    "displayLabel": "KVN-US",
+    "country": "Korea",
+    "latitude": 35.54559,
+    "longitude": 129.24915,
+    "elevation": 128,
+    "diameter": 21,
+    "aliases": [
+      "KVN-US"
+    ],
+    "defaultGroup": "other"
+  },
+  {
     "id": "KVNYS",
     "code": "KY",
     "name": "Korean VLBI Network Yonsei",
@@ -703,32 +733,6 @@
       "KVN-YS"
     ],
     "defaultGroup": "eht"
-  },
-  {
-    "id": "KVNTN",
-    "code": "KT",
-    "name": "Korean VLBI Network Tamna",
-    "displayLabel": "KVNTN",
-    "country": "Korea",
-    "latitude": 33.289021,
-    "longitude": 126.459573,
-    "elevation": 411,
-    "diameter": 21,
-    "aliases": [],
-    "defaultGroup": "other"
-  },
-  {
-    "id": "KVNUS",
-    "code": "KU",
-    "name": "Korean VLBI Network Ulsan",
-    "displayLabel": "KVNUS",
-    "country": "Korea",
-    "latitude": 35.54559,
-    "longitude": 129.24915,
-    "elevation": 128,
-    "diameter": 21,
-    "aliases": [],
-    "defaultGroup": "other"
   },
   {
     "id": "LAS",

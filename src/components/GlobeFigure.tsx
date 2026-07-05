@@ -61,6 +61,9 @@ const COUNTRY_FEATURES = (
   worldCountries as unknown as { features: CountryFeature[] }
 ).features;
 
+const BORDER_MAP_GRATICULE_COLOR = "#555b61";
+const BORDER_MAP_GRATICULE_MIN_OPACITY = 0.52;
+
 function isIceFeature(feature: CountryFeature): boolean {
   return (
     feature.properties.CONTINENT === "Antarctica" ||
@@ -265,9 +268,21 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
             <path
               d={path(geoGraticule10()) ?? undefined}
               fill="none"
-              stroke={config.map.graticuleColor}
+              stroke={
+                config.map.backgroundStyle === "borders"
+                  ? BORDER_MAP_GRATICULE_COLOR
+                  : config.map.graticuleColor
+              }
               strokeWidth={0.7}
-              opacity={config.map.graticuleOpacity}
+              opacity={
+                config.map.backgroundStyle === "borders"
+                  ? Math.max(
+                      config.map.graticuleOpacity,
+                      BORDER_MAP_GRATICULE_MIN_OPACITY,
+                    )
+                  : config.map.graticuleOpacity
+              }
+              className="graticule"
               pointerEvents="none"
             />
           )}

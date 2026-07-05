@@ -745,7 +745,11 @@ export function Controls({ config, setConfig }: ControlsProps) {
         </button>
       </Section>
 
-      <Section title="Globe & canvas" subtitle={`${config.figure.width} × ${config.figure.height} px`}>
+      <Section
+        title="Globe & canvas"
+        subtitle={`${config.figure.width} × ${config.figure.height} px`}
+        testId="globe-canvas-section"
+      >
         <label className="field">
           <span>Globe background</span>
           <select
@@ -792,6 +796,7 @@ export function Controls({ config, setConfig }: ControlsProps) {
         )}
         <Switch
           label="Graticule"
+          testId="graticule-toggle"
           checked={config.map.showGraticule}
           onChange={(showGraticule) =>
             setConfig((current) => ({

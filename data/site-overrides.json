@@ -26,6 +26,14 @@
       "displayLabel": "KVN-YS",
       "aliases": ["KVN-YS"]
     },
+    "KVNTN": {
+      "displayLabel": "KVN-TN",
+      "aliases": ["KVN-TN"]
+    },
+    "KVNUS": {
+      "displayLabel": "KVN-US",
+      "aliases": ["KVN-US"]
+    },
     "BAJA": {
       "defaultGroup": "ngeht",
       "displayLabel": "SPM",

@@ -46,6 +46,30 @@ const EHT_2024 = [
   "SPT",
 ];
 
+const GMVA = [
+  "ALMA",
+  "APEX",
+  "EFF",
+  "GBT",
+  "IRAM",
+  "KVNYS",
+  "KVNPC",
+  "KVNTN",
+  "KVNUS",
+  "MET",
+  "NOEMA",
+  "ONS",
+  "VLBBR",
+  "VLBFD",
+  "VLBKP",
+  "VLBLA",
+  "VLBMK",
+  "VLBNL",
+  "VLBOV",
+  "VLBPT",
+  "YEB",
+];
+
 const NGEHT_PHASE_1_GROUP_1 = [
   "ALMA",
   "APEX",
@@ -63,6 +87,28 @@ const NGEHT_PHASE_1_GROUP_1 = [
 ];
 const NGEHT_PHASE_1_GROUP_2 = ["HAY", "JELM", "LAS", "OVRO", "BAJA", "CNI"];
 const NGEHT_PHASE_2_GROUP_3 = ["HESS", "BOL", "KILI", "SGO", "SPX"];
+
+const VGOS = [
+  "EFF",
+  "GARS",
+  "GGAO",
+  "HOB",
+  "ISH",
+  "KATH",
+  "KOKEE",
+  "MACGO",
+  "MET",
+  "MIZ",
+  "NAN",
+  "NYALE",
+  "ONSNE",
+  "ONSSW",
+  "SHE",
+  "TNMA",
+  "WEST",
+  "WETTZ",
+  "YEB",
+];
 
 const VLBA = [
   "VLBBR",
@@ -121,6 +167,12 @@ export const PRESETS: FigurePreset[] = [
     siteGroups: grouped(EHT_2024, "eht"),
   },
   {
+    id: "gmva",
+    name: "GMVA",
+    description: "Global Millimeter VLBI Array.",
+    siteGroups: grouped(GMVA, "eht"),
+  },
+  {
     id: "ngeht-phase-1",
     name: "ngEHT (Phase 1)",
     description: "Phase 1 reference array, grouped by existing and new sites.",
@@ -138,6 +190,12 @@ export const PRESETS: FigurePreset[] = [
       ...grouped(NGEHT_PHASE_1_GROUP_2, "ngeht"),
       ...grouped(NGEHT_PHASE_2_GROUP_3, "other"),
     },
+  },
+  {
+    id: "vgos",
+    name: "VGOS",
+    description: "VLBI Global Observing System.",
+    siteGroups: grouped(VGOS, "eht"),
   },
   {
     id: "vlba",
