@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { PRESETS } from "../data/presets";
 import { SITE_BY_ID, SITES } from "../data/sites";
 import {
@@ -144,6 +144,8 @@ function RangeField({
   suffix = "",
   onChange,
   testId,
+  editableValue = false,
+  valueTestId,
 }: {
   label: string;
   value: number;
@@ -153,26 +155,94 @@ function RangeField({
   suffix?: string;
   onChange: (value: number) => void;
   testId?: string;
+  editableValue?: boolean;
+  valueTestId?: string;
 }) {
+  const formattedValue = Number.isInteger(step) ? String(value) : value.toFixed(2);
+  const [draftValue, setDraftValue] = useState(formattedValue);
+  const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    if (!editing) setDraftValue(formattedValue);
+  }, [editing, formattedValue]);
+
+  const commitDraftValue = (rawValue: string) => {
+    const parsedValue = Number(rawValue);
+    if (!rawValue.trim() || !Number.isFinite(parsedValue)) {
+      setDraftValue(formattedValue);
+      return;
+    }
+
+    const clampedValue = Math.min(max, Math.max(min, parsedValue));
+    const decimalPlaces = step.toString().split(".")[1]?.length ?? 0;
+    const steppedValue =
+      min + Math.round((clampedValue - min) / step) * step;
+    const normalizedValue = Number(steppedValue.toFixed(decimalPlaces));
+    onChange(normalizedValue);
+    setDraftValue(
+      Number.isInteger(step)
+        ? String(normalizedValue)
+        : normalizedValue.toFixed(decimalPlaces),
+    );
+  };
+
   return (
-    <label className="range-field">
+    <div className="range-field">
       <span>
         {label}
-        <output>
-          {Number.isInteger(step) ? value : value.toFixed(2)}
-          {suffix}
-        </output>
+        {editableValue ? (
+          <span className="range-value-input">
+            <input
+              type="number"
+              data-testid={valueTestId}
+              aria-label={`${label} value`}
+              value={draftValue}
+              min={min}
+              max={max}
+              step={step}
+              inputMode="decimal"
+              onFocus={() => setEditing(true)}
+              onChange={(event) => {
+                const nextDraftValue = event.target.value;
+                setDraftValue(nextDraftValue);
+                const nextValue = Number(nextDraftValue);
+                if (
+                  nextDraftValue.trim() &&
+                  Number.isFinite(nextValue) &&
+                  nextValue >= min &&
+                  nextValue <= max
+                ) {
+                  onChange(nextValue);
+                }
+              }}
+              onBlur={(event) => {
+                commitDraftValue(event.currentTarget.value);
+                setEditing(false);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") event.currentTarget.blur();
+              }}
+            />
+            {suffix && <span aria-hidden="true">{suffix}</span>}
+          </span>
+        ) : (
+          <output>
+            {formattedValue}
+            {suffix}
+          </output>
+        )}
       </span>
       <input
         type="range"
         data-testid={testId}
+        aria-label={label}
         value={value}
         min={min}
         max={max}
         step={step}
         onChange={(event) => onChange(Number(event.target.value))}
       />
-    </label>
+    </div>
   );
 }
 
@@ -296,6 +366,8 @@ export function Controls({ config, setConfig }: ControlsProps) {
           max={180}
           step={0.01}
           suffix="°"
+          editableValue
+          valueTestId="center-longitude-input"
           onChange={(value) =>
             setConfig((current) => ({
               ...current,
@@ -311,6 +383,8 @@ export function Controls({ config, setConfig }: ControlsProps) {
           max={90}
           step={0.01}
           suffix="°"
+          editableValue
+          valueTestId="center-latitude-input"
           onChange={(value) =>
             setConfig((current) => ({
               ...current,

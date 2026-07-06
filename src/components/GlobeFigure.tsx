@@ -382,6 +382,14 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
               })}
             </g>
           )}
+          <path
+            d={spherePath}
+            fill="none"
+            stroke={config.map.borderColor}
+            strokeWidth={config.map.borderWidth}
+            pointerEvents="none"
+            className="globe-border"
+          />
           {config.labels.enabled && config.labels.showLeaderLines && (
             <g className="label-leaders" pointerEvents="none">
               {projectedSites.map((entry) => {
@@ -442,14 +450,6 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
               );
             })}
           </g>
-          <path
-            d={spherePath}
-            fill="none"
-            stroke={config.map.borderColor}
-            strokeWidth={config.map.borderWidth}
-            pointerEvents="none"
-            className="globe-border"
-          />
           {config.labels.enabled && (
             <g className="site-labels">
               {projectedSites.map((entry) => {
