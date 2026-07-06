@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PRESETS } from "../data/presets";
+import { SITE_BY_ID } from "../data/sites";
 import type { AppConfig } from "../types";
 import {
   applyBaselineStyle,
@@ -42,6 +43,25 @@ describe("figure configuration", () => {
 
   it("preserves the requested preset memberships", () => {
     const expected: Record<string, string[]> = {
+      EAVN: [
+        "HIT",
+        "IRK",
+        "ISG",
+        "KNM",
+        "KVNPC",
+        "KVNTN",
+        "KVNUS",
+        "KVNYS",
+        "MIZ",
+        "NAN",
+        "NOR",
+        "OGA",
+        "SHE",
+        "TAK",
+        "TNMA",
+        "UDSC",
+        "YAM",
+      ],
       "EHT (2017)": ["ALMA", "APEX", "IRAM", "JCMT", "LMT", "SMA", "SMT", "SPT"],
       "EHT (2018)": [
         "ALMA",
@@ -104,6 +124,29 @@ describe("figure configuration", () => {
         "SMA",
         "SMT",
         "SPT",
+      ],
+      EVN: [
+        "CAM",
+        "EFF",
+        "HART",
+        "IRB",
+        "JOD",
+        "KNM",
+        "KVNTN",
+        "KVNUS",
+        "KVNYS",
+        "MED",
+        "MET",
+        "NAN",
+        "NOTO",
+        "ONS",
+        "SHE",
+        "SRT",
+        "TNMA",
+        "TOR",
+        "WETTZ",
+        "WSRT",
+        "YEB",
       ],
       GMVA: [
         "ALMA",
@@ -176,25 +219,39 @@ describe("figure configuration", () => {
         "SPX",
       ],
       VGOS: [
+        "AGGO",
+        "BDRY",
         "EFF",
         "GARS",
         "GGAO",
+        "HART",
         "HOB",
         "ISH",
+        "JARE",
         "KATH",
         "KOKEE",
         "MACGO",
+        "MAT",
+        "MED",
         "MET",
         "MIZ",
         "NAN",
+        "NOTO",
         "NYALE",
         "ONSNE",
         "ONSSW",
+        "PRKS",
+        "ROEN",
+        "SEJ",
         "SHE",
+        "SVET",
         "TNMA",
+        "WARK",
         "WEST",
         "WETTZ",
+        "YAR",
         "YEB",
+        "ZELE",
       ],
       VLBA: [
         "VLBBR",
@@ -213,6 +270,14 @@ describe("figure configuration", () => {
     for (const [name, siteIds] of Object.entries(expected)) {
       const preset = PRESETS.find((candidate) => candidate.name === name);
       expect(Object.keys(preset?.siteGroups ?? {}).sort()).toEqual([...siteIds].sort());
+    }
+  });
+
+  it("only references stations present in the catalog", () => {
+    for (const preset of PRESETS) {
+      for (const siteId of Object.keys(preset.siteGroups)) {
+        expect(SITE_BY_ID.has(siteId), `${preset.name}: ${siteId}`).toBe(true);
+      }
     }
   });
 

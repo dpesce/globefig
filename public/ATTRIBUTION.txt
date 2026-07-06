@@ -26,8 +26,8 @@ https://github.com/nvkelso/natural-earth-vector
 Telescope catalog
 =================
 
-Telescope_Site_Matrix.csv from Smithsonian/ngeht-sims, source commit:
-8b1c84735c91d1c629e759c93f1603528a1f32fe
+Telescope_Site_Matrix.csv is a snapshot of the ngEHT working telescope
+catalog, originally derived from Smithsonian/ngeht-sims.
 
 The source repository is licensed under the MIT License:
 https://github.com/Smithsonian/ngeht-sims

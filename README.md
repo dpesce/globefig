@@ -13,7 +13,7 @@ browser and can be hosted on GitHub Pages.
 ## Features
 
 - Hammer–Aitoff, orthographic, Mollweide, and Robinson projections
-- Searchable 115-site telescope catalog and observing-array presets
+- Searchable 141-site telescope catalog and observing-array presets
 - Great-circle and projected-straight baselines
 - Per-group marker, label, and complete baseline styles
 - Satellite, shaded-relief, three-color, and border-only globe backgrounds

@@ -921,7 +921,7 @@ export function Controls({ config, setConfig }: ControlsProps) {
       <div className="catalog-note">
         <span>Catalog</span>
         <strong>{SITES.length} sites</strong>
-        <small>ngEHT simulation catalog snapshot · 2025-11-28</small>
+        <small>ngEHT simulation catalog snapshot · 2026-07-05</small>
       </div>
     </aside>
   );

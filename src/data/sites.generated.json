@@ -1,5 +1,18 @@
 [
   {
+    "id": "AGGO",
+    "code": "AG",
+    "name": "Argentine-German Geodetic Observatory",
+    "displayLabel": "AGGO",
+    "country": "Argentina",
+    "latitude": -34.8739,
+    "longitude": -58.51398,
+    "elevation": 36,
+    "diameter": 6,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "ALI",
     "code": "AL",
     "name": "summit of a minor peak at the top of a trail located in Gar County Tibet",
@@ -54,6 +67,19 @@
     "defaultGroup": "eht"
   },
   {
+    "id": "ARE",
+    "code": "AR",
+    "name": "Arecibo Observatory radio telescope (decommissioned)",
+    "displayLabel": "ARE",
+    "country": "Puerto Rico",
+    "latitude": 18.3442,
+    "longitude": -66.752703,
+    "elevation": 242,
+    "diameter": 305,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "ATCA",
     "code": "AT",
     "name": "Australia Telescope Compact Array",
@@ -89,6 +115,19 @@
     "longitude": -118.255716,
     "elevation": 4342,
     "diameter": null,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "BDRY",
+    "code": "BD",
+    "name": "Badary VGOS 13m station",
+    "displayLabel": "BDRY",
+    "country": "Russia",
+    "latitude": 51.76935,
+    "longitude": 102.23555,
+    "elevation": 835,
+    "diameter": 13,
     "aliases": [],
     "defaultGroup": "other"
   },
@@ -167,6 +206,19 @@
     "longitude": -41.798766,
     "elevation": 2847,
     "diameter": null,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "CAM",
+    "code": "CM",
+    "name": "Mullard Radio Astronomy Observatory VLBI dish",
+    "displayLabel": "CAM",
+    "country": "England",
+    "latitude": 52.166939,
+    "longitude": 0.037154,
+    "elevation": 21,
+    "diameter": 32,
     "aliases": [],
     "defaultGroup": "other"
   },
@@ -437,6 +489,19 @@
     "defaultGroup": "other"
   },
   {
+    "id": "HART",
+    "code": "HH",
+    "name": "Hartebeesthoek Radio Astronomy Observatory VGOS antenna",
+    "displayLabel": "HART",
+    "country": "South Africa",
+    "latitude": -25.889736,
+    "longitude": 27.684296,
+    "elevation": 1379,
+    "diameter": 13.2,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "HAY",
     "code": "HA",
     "name": "Haystack Observatory",
@@ -509,6 +574,19 @@
     "defaultGroup": "eht"
   },
   {
+    "id": "IRB",
+    "code": "IB",
+    "name": "Ventspils International Radioastronomy Center",
+    "displayLabel": "IRB",
+    "country": "Latvia",
+    "latitude": 57.55321,
+    "longitude": 21.854877,
+    "elevation": 19,
+    "diameter": 32,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "IRK",
     "code": "IR",
     "name": "Iriki dish of VERA",
@@ -550,6 +628,19 @@
     "defaultGroup": "other"
   },
   {
+    "id": "JARE",
+    "code": "SY",
+    "name": "Syowa Station VGOS dish of the Japanese Antarctic Research Expedition",
+    "displayLabel": "JARE",
+    "country": "Antarctica",
+    "latitude": -69.005723,
+    "longitude": 39.585435,
+    "elevation": 29,
+    "diameter": 11,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "JCMT",
     "code": "JC",
     "name": "James Clerk Maxwell Telescope",
@@ -585,6 +676,32 @@
     "longitude": -105.98643,
     "elevation": 2751,
     "diameter": null,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "JOD",
+    "code": "JB",
+    "name": "Lovell Telescope at Jodrell Bank",
+    "displayLabel": "JOD",
+    "country": "England",
+    "latitude": 53.236477,
+    "longitude": -2.308722,
+    "elevation": 90,
+    "diameter": 76.2,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "KASH",
+    "code": "KB",
+    "name": "Kashima 34m radio telescope (decommissioned)",
+    "displayLabel": "KASH",
+    "country": "Japan",
+    "latitude": 35.9559,
+    "longitude": 140.6601,
+    "elevation": 28,
+    "diameter": 34,
     "aliases": [],
     "defaultGroup": "other"
   },
@@ -640,10 +757,23 @@
     "latitude": 25.028,
     "longitude": 102.796,
     "elevation": 1974,
-    "diameter": 26,
+    "diameter": 40,
     "aliases": [
       "KMRT40"
     ],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "KOG",
+    "code": "KG",
+    "name": "Koganei VLBI station (decommissioned)",
+    "displayLabel": "KOG",
+    "country": "Japan",
+    "latitude": 35.710554,
+    "longitude": 139.48809,
+    "elevation": 125,
+    "diameter": 11,
+    "aliases": [],
     "defaultGroup": "other"
   },
   {
@@ -804,8 +934,21 @@
     "defaultGroup": "other"
   },
   {
-    "id": "MATJ",
+    "id": "MAT",
     "code": "MA",
+    "name": "Matera CGS VLBI station",
+    "displayLabel": "MAT",
+    "country": "Italy",
+    "latitude": 40.649514,
+    "longitude": 16.703986,
+    "elevation": 537,
+    "diameter": 20,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "MATJ",
+    "code": "MJ",
     "name": "Matjiesfontein",
     "displayLabel": "MATJ",
     "country": "South Africa",
@@ -813,6 +956,19 @@
     "longitude": 20.582,
     "elevation": 1340,
     "diameter": null,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "MED",
+    "code": "MC",
+    "name": "Medicina Gavril Grueff Radio Telescope",
+    "displayLabel": "MED",
+    "country": "Italy",
+    "latitude": 44.520513,
+    "longitude": 11.646938,
+    "elevation": 25,
+    "diameter": 32,
     "aliases": [],
     "defaultGroup": "other"
   },
@@ -871,7 +1027,7 @@
   {
     "id": "NAN",
     "code": "NS",
-    "name": "Nanshan dish of the EAVN",
+    "name": "Nanshan dish of the EAVN in Urumqi",
     "displayLabel": "NAN",
     "country": "China",
     "latitude": 43.471,
@@ -921,6 +1077,19 @@
     "longitude": 136.737082,
     "elevation": 17,
     "diameter": 11,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "NOTO",
+    "code": "NT",
+    "name": "Noto Radio Telescope operated by INAF",
+    "displayLabel": "NOTO",
+    "country": "Sicily",
+    "latitude": 36.87605,
+    "longitude": 14.989031,
+    "elevation": 30,
+    "diameter": 32,
     "aliases": [],
     "defaultGroup": "other"
   },
@@ -1063,6 +1232,32 @@
     "defaultGroup": "other"
   },
   {
+    "id": "PRKS",
+    "code": "PA",
+    "name": "Parkes Observatory",
+    "displayLabel": "PRKS",
+    "country": "Australia",
+    "latitude": -32.998328,
+    "longitude": 148.263623,
+    "elevation": 415,
+    "diameter": 64,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "ROEN",
+    "code": "FT",
+    "name": "Fortaleza Geodetic Observatory aka Radio Observatorio Espacial do Nordeste",
+    "displayLabel": "ROEN",
+    "country": "Brazil",
+    "latitude": -3.877487,
+    "longitude": -38.426339,
+    "elevation": 28,
+    "diameter": 12,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "ROT",
     "code": "RT",
     "name": "site of the inactive ROT54 radio telescope",
@@ -1085,6 +1280,19 @@
     "longitude": -116.824632,
     "elevation": 3502,
     "diameter": null,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "SEJ",
+    "code": "KV",
+    "name": "Sejong VLBI station",
+    "displayLabel": "SEJ",
+    "country": "South Korea",
+    "latitude": 36.520991,
+    "longitude": 127.302913,
+    "elevation": 146,
+    "diameter": 22,
     "aliases": [],
     "defaultGroup": "other"
   },
@@ -1114,6 +1322,19 @@
     "aliases": [
       "SHRT25"
     ],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "SIM",
+    "code": "SZ",
+    "name": "Simeiz Observatory radio telescope (not operational)",
+    "displayLabel": "SIM",
+    "country": "Ukraine",
+    "latitude": 44.397533,
+    "longitude": 33.979593,
+    "elevation": 15,
+    "diameter": 22,
+    "aliases": [],
     "defaultGroup": "other"
   },
   {
@@ -1212,6 +1433,19 @@
     "defaultGroup": "other"
   },
   {
+    "id": "SRT",
+    "code": "SR",
+    "name": "Sardinia Radio Telescope",
+    "displayLabel": "SRT",
+    "country": "Sardinia",
+    "latitude": 39.493004,
+    "longitude": 9.245102,
+    "elevation": 590,
+    "diameter": 64,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "STL",
     "code": "SL",
     "name": "site of the South African Astronomical Observatory in Sutherland",
@@ -1234,6 +1468,19 @@
     "longitude": 68.467537,
     "elevation": 2437,
     "diameter": null,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "SVET",
+    "code": "SV",
+    "name": "Svetloe VGOS 13m station",
+    "displayLabel": "SVET",
+    "country": "Russia",
+    "latitude": 60.5343,
+    "longitude": 29.7795,
+    "elevation": 39,
+    "diameter": 13,
     "aliases": [],
     "defaultGroup": "other"
   },
@@ -1283,6 +1530,19 @@
     "defaultGroup": "other"
   },
   {
+    "id": "TOR",
+    "code": "TO",
+    "name": "Toruń Radio Observatory",
+    "displayLabel": "TOR",
+    "country": "Poland",
+    "latitude": 53.095422,
+    "longitude": 18.5642,
+    "elevation": 83,
+    "diameter": 32,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "TRL",
     "code": "TR",
     "name": "site of the Norwegian research station Troll",
@@ -1292,6 +1552,32 @@
     "longitude": 2.536986,
     "elevation": 1275,
     "diameter": null,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "TSU",
+    "code": "TS",
+    "name": "Tsukuba VLBI station (decommissioned)",
+    "displayLabel": "TSU",
+    "country": "Japan",
+    "latitude": 36.1031,
+    "longitude": 140.0887,
+    "elevation": 27,
+    "diameter": 34,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "UDSC",
+    "code": "UD",
+    "name": "Usuda Deep Space Center",
+    "displayLabel": "UDSC",
+    "country": "Japan",
+    "latitude": 36.1324037,
+    "longitude": 138.3627739,
+    "elevation": 1459,
+    "diameter": 64,
     "aliases": [],
     "defaultGroup": "other"
   },
@@ -1441,6 +1727,19 @@
     "defaultGroup": "other"
   },
   {
+    "id": "WARK",
+    "code": "WW",
+    "name": "Warkworth Space Center",
+    "displayLabel": "WARK",
+    "country": "New Zealand",
+    "latitude": -36.431784,
+    "longitude": 174.668153,
+    "elevation": 71,
+    "diameter": 12.1,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "WEST",
     "code": "WF",
     "name": "Westford VGOS dish",
@@ -1468,6 +1767,19 @@
     "aliases": [
       "WETTZ13S"
     ],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "WSRT",
+    "code": "WB",
+    "name": "Westerbork Synthesis Radio Telescope",
+    "displayLabel": "WSRT",
+    "country": "Netherlands",
+    "latitude": 52.915065,
+    "longitude": 6.603337,
+    "elevation": 19,
+    "diameter": 93.5,
+    "aliases": [],
     "defaultGroup": "other"
   },
   {
@@ -1512,6 +1824,19 @@
     "defaultGroup": "other"
   },
   {
+    "id": "YAR",
+    "code": "YG",
+    "name": "Yarragadee Geodetic Observatory operated by University of Tasmania",
+    "displayLabel": "YAR",
+    "country": "Australia",
+    "latitude": -29.047121,
+    "longitude": 115.345629,
+    "elevation": 244,
+    "diameter": 12,
+    "aliases": [],
+    "defaultGroup": "other"
+  },
+  {
     "id": "YBJ",
     "code": "YJ",
     "name": "small developed town in Damxung County Tibet",
@@ -1552,6 +1877,19 @@
     "aliases": [
       "RAEGYEB"
     ],
+    "defaultGroup": "other"
+  },
+  {
+    "id": "ZELE",
+    "code": "ZC",
+    "name": "Zelenchukskaya VGOS 13m station",
+    "displayLabel": "ZELE",
+    "country": "Russia",
+    "latitude": 43.7882,
+    "longitude": 41.5637,
+    "elevation": 1131,
+    "diameter": 13,
+    "aliases": [],
     "defaultGroup": "other"
   },
   {

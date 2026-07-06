@@ -4,6 +4,26 @@ function grouped(ids: string[], groupId: string): Record<string, string> {
   return Object.fromEntries(ids.map((id) => [id, groupId]));
 }
 
+const EAVN = [
+  "HIT",
+  "IRK",
+  "ISG",
+  "KNM",
+  "KVNPC",
+  "KVNTN",
+  "KVNUS",
+  "KVNYS",
+  "MIZ",
+  "NAN",
+  "NOR",
+  "OGA",
+  "SHE",
+  "TAK",
+  "TNMA",
+  "UDSC",
+  "YAM",
+];
+
 const EHT_2017 = ["ALMA", "APEX", "IRAM", "JCMT", "LMT", "SMA", "SMT", "SPT"];
 const EHT_2018 = [...EHT_2017, "GLT"];
 const EHT_2021 = [
@@ -44,6 +64,30 @@ const EHT_2024 = [
   "SMA",
   "SMT",
   "SPT",
+];
+
+const EVN = [
+  "CAM",
+  "EFF",
+  "HART",
+  "IRB",
+  "JOD",
+  "KNM",
+  "KVNTN",
+  "KVNUS",
+  "KVNYS",
+  "MED",
+  "MET",
+  "NAN",
+  "NOTO",
+  "ONS",
+  "SHE",
+  "SRT",
+  "TNMA",
+  "TOR",
+  "WETTZ",
+  "WSRT",
+  "YEB",
 ];
 
 const GMVA = [
@@ -89,25 +133,39 @@ const NGEHT_PHASE_1_GROUP_2 = ["HAY", "JELM", "LAS", "OVRO", "BAJA", "CNI"];
 const NGEHT_PHASE_2_GROUP_3 = ["HESS", "BOL", "KILI", "SGO", "SPX"];
 
 const VGOS = [
+  "AGGO",
+  "BDRY",
   "EFF",
   "GARS",
   "GGAO",
+  "HART",
   "HOB",
   "ISH",
+  "JARE",
   "KATH",
   "KOKEE",
   "MACGO",
+  "MAT",
+  "MED",
   "MET",
   "MIZ",
   "NAN",
+  "NOTO",
   "NYALE",
   "ONSNE",
   "ONSSW",
+  "PRKS",
+  "ROEN",
+  "SEJ",
   "SHE",
+  "SVET",
   "TNMA",
+  "WARK",
   "WEST",
   "WETTZ",
+  "YAR",
   "YEB",
+  "ZELE",
 ];
 
 const VLBA = [
@@ -129,6 +187,12 @@ export const PRESETS: FigurePreset[] = [
     name: "Blank globe",
     description: "No telescopes selected.",
     siteGroups: {},
+  },
+  {
+    id: "eavn",
+    name: "EAVN",
+    description: "East Asian VLBI Network.",
+    siteGroups: grouped(EAVN, "eht"),
   },
   {
     id: "eht-2017",
@@ -165,6 +229,12 @@ export const PRESETS: FigurePreset[] = [
     name: "EHT (2024)",
     description: "Event Horizon Telescope 2024 observing array.",
     siteGroups: grouped(EHT_2024, "eht"),
+  },
+  {
+    id: "evn",
+    name: "EVN",
+    description: "European VLBI Network.",
+    siteGroups: grouped(EVN, "eht"),
   },
   {
     id: "gmva",

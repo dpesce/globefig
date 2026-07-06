@@ -3,7 +3,7 @@ import { SITE_BY_ID, SITES } from "./sites";
 
 describe("normalized telescope catalog", () => {
   it("contains valid, uniquely identified coordinates", () => {
-    expect(SITES).toHaveLength(115);
+    expect(SITES).toHaveLength(141);
     expect(new Set(SITES.map((site) => site.id)).size).toBe(SITES.length);
     for (const site of SITES) {
       expect(site.latitude).toBeGreaterThanOrEqual(-90);
@@ -23,5 +23,7 @@ describe("normalized telescope catalog", () => {
     expect(SITE_BY_ID.get("KVNYS")?.displayLabel).toBe("KVN-YS");
     expect(SITE_BY_ID.get("KVNTN")?.displayLabel).toBe("KVN-TN");
     expect(SITE_BY_ID.get("KVNUS")?.displayLabel).toBe("KVN-US");
+    expect(SITE_BY_ID.get("BDRY")?.displayLabel).toBe("BDRY");
+    expect(SITE_BY_ID.get("SHE")?.displayLabel).toBe("SHE");
   });
 });
