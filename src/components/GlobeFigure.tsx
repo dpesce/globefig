@@ -63,6 +63,7 @@ const COUNTRY_FEATURES = (
 
 const BORDER_MAP_GRATICULE_COLOR = "#555b61";
 const BORDER_MAP_GRATICULE_MIN_OPACITY = 0.52;
+const GLOBE_CLIP_ID = "globe-boundary-clip";
 
 function isIceFeature(feature: CountryFeature): boolean {
   return (
@@ -138,6 +139,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
       () => new Map(labelPlacements.map((placement) => [placement.siteId, placement])),
       [labelPlacements],
     );
+    const spherePath = path(SPHERE) ?? undefined;
 
     const assignSvgRef = useCallback(
       (node: SVGSVGElement | null) => {
@@ -244,8 +246,13 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
             }
           }}
         >
+          <defs>
+            <clipPath id={GLOBE_CLIP_ID}>
+              <path d={spherePath} />
+            </clipPath>
+          </defs>
           <path
-            d={path(SPHERE) ?? undefined}
+            d={spherePath}
             fill={
               rasterBackground
                 ? "transparent"
@@ -256,7 +263,11 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
             className="sphere-fill"
           />
           {!rasterBackground && (
-            <g className="vector-globe-background" pointerEvents="none">
+            <g
+              className="vector-globe-background"
+              pointerEvents="none"
+              clipPath={`url(#${GLOBE_CLIP_ID})`}
+            >
               {COUNTRY_FEATURES.map((feature, index) => (
                 <path
                   key={`${feature.properties.ADMIN ?? "country"}-${index}`}
@@ -299,10 +310,16 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
               }
               className="graticule"
               pointerEvents="none"
+              clipPath={`url(#${GLOBE_CLIP_ID})`}
             />
           )}
           {config.baselines.enabled && (
-            <g className="baselines" fill="none" pointerEvents="none">
+            <g
+              className="baselines"
+              fill="none"
+              pointerEvents="none"
+              clipPath={`url(#${GLOBE_CLIP_ID})`}
+            >
               {pairs.map((pair) => {
                 const first = projectedById.get(pair.first.id);
                 const second = projectedById.get(pair.second.id);
@@ -426,7 +443,7 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
             })}
           </g>
           <path
-            d={path(SPHERE) ?? undefined}
+            d={spherePath}
             fill="none"
             stroke={config.map.borderColor}
             strokeWidth={config.map.borderWidth}

@@ -324,6 +324,27 @@ export function Controls({ config, setConfig }: ControlsProps) {
             north-up aspect.
           </p>
         )}
+        <button
+          type="button"
+          className="secondary-button full-width"
+          data-testid="projection-center-reset"
+          disabled={
+            config.projection.centerLongitude === 0 &&
+            config.projection.centerLatitude === 0
+          }
+          onClick={() =>
+            setConfig((current) => ({
+              ...current,
+              projection: {
+                ...current.projection,
+                centerLongitude: 0,
+                centerLatitude: 0,
+              },
+            }))
+          }
+        >
+          Reset map center
+        </button>
       </Section>
 
       <Section

@@ -40,7 +40,7 @@ describe("map projections", () => {
     expect(SECONDARY_PROJECTION_OPTIONS).toHaveLength(10);
   });
 
-  it("round-trips representative coordinates through Strebe 1995", () => {
+  it("round-trips representative coordinates through Strebe", () => {
     const config = createDefaultConfig().projection;
     config.name = "strebe";
     const projection = createProjection(config, width, height);

@@ -79,7 +79,7 @@ export const SECONDARY_PROJECTION_OPTIONS: ProjectionOption[] = [
   },
   {
     value: "strebe",
-    label: "Strebe 1995",
+    label: "Strebe",
     note: "Equal-area view designed around continental shapes",
   },
   {
