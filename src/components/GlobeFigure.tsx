@@ -202,6 +202,21 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
       }));
     };
 
+    const centerOnSite = (site: TelescopeSite) => {
+      setConfig((current) => ({
+        ...current,
+        projection: {
+          ...current.projection,
+          centerLongitude: site.longitude,
+          centerLatitude: site.latitude,
+        },
+        baselines: {
+          ...current.baselines,
+          focusSiteId: site.id,
+        },
+      }));
+    };
+
     return (
       <div
         className="figure-stage"
@@ -391,6 +406,10 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
                     event.stopPropagation();
                     setFocusSite(entry.site);
                   }}
+                  onDoubleClick={(event) => {
+                    event.stopPropagation();
+                    centerOnSite(entry.site);
+                  }}
                   role="button"
                   aria-label={`Focus ${entry.label}`}
                   tabIndex={0}
@@ -399,7 +418,8 @@ export const GlobeFigure = forwardRef<SVGSVGElement, GlobeFigureProps>(
                   }}
                 >
                   <title>
-                    {entry.label} · {entry.site.name} · {entry.site.country}
+                    {entry.label} · {entry.site.name} · {entry.site.country} · Double-click
+                    to center
                   </title>
                 </path>
               );

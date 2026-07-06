@@ -1,7 +1,12 @@
 import { useState, type ReactNode } from "react";
 import { PRESETS } from "../data/presets";
 import { SITE_BY_ID, SITES } from "../data/sites";
-import { PROJECTION_OPTIONS, resolveBaselineGeometry } from "../geo/projections";
+import {
+  PRIMARY_PROJECTION_OPTIONS,
+  PROJECTION_OPTIONS,
+  resolveBaselineGeometry,
+  SECONDARY_PROJECTION_OPTIONS,
+} from "../geo/projections";
 import { applyBaselineStyle, applyPreset } from "../state/config";
 import type {
   AppConfig,
@@ -252,6 +257,7 @@ export function Controls({ config, setConfig }: ControlsProps) {
         <label className="field">
           <span>Map projection</span>
           <select
+            data-testid="projection-select"
             value={config.projection.name}
             onChange={(event) =>
               setConfig((current) => ({
@@ -263,11 +269,20 @@ export function Controls({ config, setConfig }: ControlsProps) {
               }))
             }
           >
-            {PROJECTION_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            <optgroup label="Primary projections">
+              {PRIMARY_PROJECTION_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Secondary projections">
+              {SECONDARY_PROJECTION_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </optgroup>
           </select>
           <small className="field-note">
             {PROJECTION_OPTIONS.find((item) => item.value === config.projection.name)?.note}
@@ -275,10 +290,11 @@ export function Controls({ config, setConfig }: ControlsProps) {
         </label>
         <RangeField
           label="Center longitude"
+          testId="center-longitude-slider"
           value={config.projection.centerLongitude}
           min={-180}
           max={180}
-          step={1}
+          step={0.01}
           suffix="°"
           onChange={(value) =>
             setConfig((current) => ({
@@ -289,10 +305,11 @@ export function Controls({ config, setConfig }: ControlsProps) {
         />
         <RangeField
           label="Center latitude"
+          testId="center-latitude-slider"
           value={config.projection.centerLatitude}
           min={-90}
           max={90}
-          step={1}
+          step={0.01}
           suffix="°"
           onChange={(value) =>
             setConfig((current) => ({

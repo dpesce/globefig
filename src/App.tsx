@@ -171,7 +171,7 @@ export default function App() {
           <div className="canvas-help">
             <span>
               <kbd>Tip</kbd> Drag labels directly on the figure. Click a telescope to highlight
-              its baselines.
+              its baselines; double-click to center the map on it.
             </span>
             <span>Exports use the exact pixel dimensions set in Globe &amp; canvas.</span>
           </div>

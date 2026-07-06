@@ -2,7 +2,17 @@ export type ProjectionName =
   | "hammer"
   | "orthographic"
   | "mollweide"
-  | "robinson";
+  | "robinson"
+  | "sinusoidal"
+  | "goode-homolosine"
+  | "collignon"
+  | "loximuthal"
+  | "strebe"
+  | "werner"
+  | "rectangular-polyconic"
+  | "lambert-azimuthal"
+  | "hammer-retroazimuthal"
+  | "armadillo";
 
 export type BaselineGeometry = "auto" | "geodesic" | "straight";
 export type MarkerShape = "circle" | "square" | "diamond" | "triangle" | "star";

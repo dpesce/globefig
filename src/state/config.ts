@@ -1,4 +1,5 @@
 import type { AppConfig, FigurePreset, StyleGroup } from "../types";
+import { PROJECTION_NAMES } from "../geo/projections";
 
 export const DEFAULT_GROUPS: Record<string, StyleGroup> = {
   eht: {
@@ -129,7 +130,7 @@ export function normalizeConfig(value: unknown): AppConfig {
     90,
     Math.max(-90, Number(merged.projection.centerLatitude) || 0),
   );
-  if (!["hammer", "orthographic", "mollweide", "robinson"].includes(merged.projection.name)) {
+  if (!PROJECTION_NAMES.includes(merged.projection.name)) {
     merged.projection.name = "hammer";
   }
   if (

@@ -1,19 +1,39 @@
 import {
+  geoAzimuthalEqualArea,
   geoDistance,
   geoOrthographic,
+  geoProjection,
   type GeoPermissibleObjects,
   type GeoProjection,
+  type GeoRawProjection,
 } from "d3-geo";
-import { geoHammer, geoMollweide, geoRobinson } from "d3-geo-projection";
+import {
+  geoArmadillo,
+  geoBonne,
+  geoCollignon,
+  geoEckert4Raw,
+  geoHammer,
+  geoHammerRaw,
+  geoHammerRetroazimuthal,
+  geoInterruptedHomolosine,
+  geoLoximuthal,
+  geoMollweide,
+  geoMollweideRaw,
+  geoRectangularPolyconic,
+  geoRobinson,
+  geoSinusoidal,
+} from "d3-geo-projection";
 import type { AppConfig, BaselineGeometry, ProjectionName, TelescopeSite } from "../types";
 
 export const SPHERE: GeoPermissibleObjects = { type: "Sphere" };
 
-export const PROJECTION_OPTIONS: Array<{
+export interface ProjectionOption {
   value: ProjectionName;
   label: string;
   note: string;
-}> = [
+}
+
+export const PRIMARY_PROJECTION_OPTIONS: ProjectionOption[] = [
   {
     value: "hammer",
     label: "Hammer–Aitoff",
@@ -36,6 +56,99 @@ export const PROJECTION_OPTIONS: Array<{
   },
 ];
 
+export const SECONDARY_PROJECTION_OPTIONS: ProjectionOption[] = [
+  {
+    value: "sinusoidal",
+    label: "Sinusoidal",
+    note: "Equal-area pseudocylindrical view",
+  },
+  {
+    value: "goode-homolosine",
+    label: "Goode homolosine",
+    note: "Interrupted equal-area world map",
+  },
+  {
+    value: "collignon",
+    label: "Collignon",
+    note: "Equal-area view with triangular poles",
+  },
+  {
+    value: "loximuthal",
+    label: "Loximuthal",
+    note: "Straight rhumb lines from its reference parallel",
+  },
+  {
+    value: "strebe",
+    label: "Strebe 1995",
+    note: "Equal-area view designed around continental shapes",
+  },
+  {
+    value: "werner",
+    label: "Werner",
+    note: "Cordiform equal-area world map",
+  },
+  {
+    value: "rectangular-polyconic",
+    label: "Rectangular polyconic",
+    note: "The War Office polyconic form",
+  },
+  {
+    value: "lambert-azimuthal",
+    label: "Lambert azimuthal equal-area",
+    note: "Equal-area view centered on one point",
+  },
+  {
+    value: "hammer-retroazimuthal",
+    label: "Hammer retroazimuthal",
+    note: "Preserves bearing toward its reference point",
+  },
+  {
+    value: "armadillo",
+    label: "Armadillo",
+    note: "Decorative oblique world view",
+  },
+];
+
+export const PROJECTION_OPTIONS = [
+  ...PRIMARY_PROJECTION_OPTIONS,
+  ...SECONDARY_PROJECTION_OPTIONS,
+];
+
+export const PROJECTION_NAMES: ProjectionName[] = PROJECTION_OPTIONS.map(
+  (option) => option.value,
+);
+
+const STREBE_STRETCH = 1.35;
+const STREBE_HAMMER_RAW = geoHammerRaw(2, 2);
+
+const strebeRaw: GeoRawProjection = (longitude, latitude) => {
+  const [eckertX, eckertY] = geoEckert4Raw(longitude, latitude);
+  const [mollweideLongitude, mollweideLatitude] = geoMollweideRaw.invert!(
+    eckertX * STREBE_STRETCH,
+    eckertY / STREBE_STRETCH,
+  );
+  const [hammerX, hammerY] = STREBE_HAMMER_RAW(
+    mollweideLongitude,
+    mollweideLatitude,
+  );
+  return [hammerX / STREBE_STRETCH, hammerY * STREBE_STRETCH];
+};
+
+strebeRaw.invert = (x, y) => {
+  const [mollweideLongitude, mollweideLatitude] = STREBE_HAMMER_RAW.invert!(
+    x * STREBE_STRETCH,
+    y / STREBE_STRETCH,
+  );
+  const [eckertX, eckertY] = geoMollweideRaw(
+    mollweideLongitude,
+    mollweideLatitude,
+  );
+  return geoEckert4Raw.invert!(
+    eckertX / STREBE_STRETCH,
+    eckertY * STREBE_STRETCH,
+  );
+};
+
 export function createProjection(
   config: AppConfig["projection"],
   width: number,
@@ -52,6 +165,36 @@ export function createProjection(
       break;
     case "robinson":
       projection = geoRobinson();
+      break;
+    case "sinusoidal":
+      projection = geoSinusoidal();
+      break;
+    case "goode-homolosine":
+      projection = geoInterruptedHomolosine();
+      break;
+    case "collignon":
+      projection = geoCollignon();
+      break;
+    case "loximuthal":
+      projection = geoLoximuthal();
+      break;
+    case "strebe":
+      projection = geoProjection(strebeRaw);
+      break;
+    case "werner":
+      projection = geoBonne().parallel(90);
+      break;
+    case "rectangular-polyconic":
+      projection = geoRectangularPolyconic();
+      break;
+    case "lambert-azimuthal":
+      projection = geoAzimuthalEqualArea();
+      break;
+    case "hammer-retroazimuthal":
+      projection = geoHammerRetroazimuthal();
+      break;
+    case "armadillo":
+      projection = geoArmadillo();
       break;
     case "hammer":
     default:
@@ -89,7 +232,18 @@ export function isSiteVisible(
   }
 
   const point = projection([site.longitude, site.latitude]);
-  return point !== null && point.every(Number.isFinite);
+  if (point === null || !point.every(Number.isFinite)) return false;
+  if (config.name !== "armadillo") return true;
+
+  // Armadillo deliberately omits part of the far southern hemisphere. Its raw
+  // projection moves those points outside the outline rather than returning null.
+  const inverse = projection.invert?.(point);
+  return (
+    inverse !== undefined &&
+    inverse !== null &&
+    inverse.every(Number.isFinite) &&
+    geoDistance([site.longitude, site.latitude], inverse) < 1e-5
+  );
 }
 
 export function resolveBaselineGeometry(

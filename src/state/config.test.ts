@@ -295,6 +295,18 @@ describe("figure configuration", () => {
     expect(normalized.figure.height).toBe(300);
   });
 
+  it("accepts secondary projections and rejects unknown projection names", () => {
+    const secondary = createDefaultConfig();
+    secondary.projection.name = "strebe";
+    expect(normalizeConfig(secondary).projection.name).toBe("strebe");
+
+    const unknown = createDefaultConfig() as unknown as {
+      projection: { name: string };
+    };
+    unknown.projection.name = "mercator";
+    expect(normalizeConfig(unknown).projection.name).toBe("hammer");
+  });
+
   it("migrates projects saved before selectable globe backgrounds", () => {
     const legacy = createDefaultConfig() as AppConfig & {
       map: AppConfig["map"] & { showRaster?: boolean };

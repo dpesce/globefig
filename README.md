@@ -12,7 +12,8 @@ browser and can be hosted on GitHub Pages.
 
 ## Features
 
-- Hammer–Aitoff, orthographic, Mollweide, and Robinson projections
+- Four primary and ten secondary map projections, from Hammer–Aitoff and
+  orthographic to Goode homolosine, Strebe 1995, and Armadillo
 - Searchable 141-site telescope catalog and observing-array presets
 - Great-circle and projected-straight baselines
 - Per-group marker, label, and complete baseline styles
